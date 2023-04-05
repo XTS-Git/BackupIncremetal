@@ -24,13 +24,14 @@ namespace nsBackup
 
             try
             {
+#if !DEBUG
                 RegistryKey rkApp = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
                 string caminhoReg = Application.ExecutablePath.ToString();
                 string[] chaves = rkApp.GetValueNames();
-                string nomeChave = "exatosBackup";
+                string nomeChave = "BackupIncremental";
                 if ( !existeChave(chaves, nomeChave)) rkApp.SetValue(nomeChave, caminhoReg);
                 rkApp.Close();
-
+#endif
                 job = new Jobs();
                 job.onStart += job_onStart;
                 job.start();
@@ -90,7 +91,7 @@ namespace nsBackup
             this.Close();
         }
 
-        #region
+#region
         private void frmPrincipal_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Left) return;
@@ -111,7 +112,7 @@ namespace nsBackup
         {
             frmPrincipal_MouseMove(sender, e);
         }
-        #endregion
+#endregion
 
         private void btnMinimizar_Click(object sender, EventArgs e)
         {
