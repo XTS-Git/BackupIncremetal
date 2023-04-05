@@ -6,7 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using Tools;
+using XTS.Tools;
 
 namespace nsBackup
 {

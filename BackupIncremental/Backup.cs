@@ -5,7 +5,8 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Windows.Forms;
-using Tools;
+using XTS;
+using XTS.Tools;
 
 namespace nsBackup
 {

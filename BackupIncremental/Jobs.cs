@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Text;
 using System.Timers;
+// using System.Windows.Forms;
 
 namespace nsBackup
 {
@@ -24,7 +25,7 @@ namespace nsBackup
 
         public bool atualizaAgenda = false;
         Backup backup;
-        Timer horarioExecucao=null;
+        System.Timers.Timer horarioExecucao=null;
 
         public List<AgendaDto> agendas;
         public DateTime ultimaVerificacao;
@@ -36,6 +37,9 @@ namespace nsBackup
         {
             agenda = new Agenda();
             agendas = agenda.lerDados();
+            if (agendas.Count == 0)
+                throw new Exception("Não existe Agenda Criada");
+
             for (int i = 0; i < agendas.Count; i++)
             {
                 agendas[i].ProximaExecucao = preparaProximaExecucao(agendas[i].horaDaExecucao);
@@ -46,7 +50,7 @@ namespace nsBackup
         public void start()
         {
             carregaJobs();
-            horarioExecucao = new Timer();
+            horarioExecucao = new System.Timers.Timer();
             horarioExecucao.Interval = 60000; // 1 minuto
             horarioExecucao.Elapsed += horarioExecucao_Tick;
             horarioExecucao.Enabled = true;

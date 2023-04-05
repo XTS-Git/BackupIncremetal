@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.33027.164
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackupIncremental", "BackupIncremental\BackupIncremental.csproj", "{CFC3D0EE-53A9-4392-B2D4-1E6AF5A8C063}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uteis", "..\Uteis\Uteis\Uteis.csproj", "{44AAB3A7-F4AC-42F1-BED9-8B056A9256F9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uteis", "..\ProjetosCSharp\Uteis\Uteis\Uteis.csproj", "{44AAB3A7-F4AC-42F1-BED9-8B056A9256F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

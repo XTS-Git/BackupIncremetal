@@ -78,7 +78,7 @@ namespace nsBackup
             List<AgendaDto> lista = new List<AgendaDto>();
             FileStream fs;
             bool existe = false;
-            if (!File.Exists(arquivoDados)) return null;
+            if (!File.Exists(arquivoDados)) return new List<AgendaDto>();
 
             fs = File.Open(arquivoDados, FileMode.Open);
 
