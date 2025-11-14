@@ -39,7 +39,7 @@ namespace nsBackup
             dtgAgendas.DataSource = null;
 
             Agenda agenda = new Agenda();
-            tarefas = agenda.lerDados();
+            tarefas = agenda.LerDados();
             tarefas.Sort((x, y) => x.horaDaExecucao.CompareTo(y.horaDaExecucao));
             dtgAgendas.DataSource = null;
             dtgAgendas.DataSource = tarefas;
@@ -227,7 +227,7 @@ namespace nsBackup
                 tarefas[linhaSelecionada].ativo = chkAtivo.Checked;
             }
 
-            if (agenda.salvaDados(tarefas))
+            if (agenda.SalvaDados(tarefas))
             {
                 job.atualizaAgenda = true;
             }
@@ -294,7 +294,7 @@ namespace nsBackup
             dto.caminhoCompleto = chkRoot.Checked;
             dto.ativo = chkAtivo.Checked;
             Jobs job = new Jobs();
-            job.executaBackup(dto);
+            job.ExecutaBackup(dto);
 
         }
     }

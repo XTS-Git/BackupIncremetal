@@ -36,11 +36,10 @@ namespace nsBackup
         }
         public event EventHandler EnviaMsgAgendaAtualizada;
 
-        public bool salvaDados(List<AgendaDto> dados)
+        public bool SalvaDados(List<AgendaDto> dados)
         {
             try
             {
-
                 Jobs job = new Jobs();
                 FileStream fs;
                 if (File.Exists(arquivoDados)) File.Delete(arquivoDados);
@@ -54,7 +53,7 @@ namespace nsBackup
                     grava = dto.horaDaExecucao + ";";
                     grava += dto.pastaDestino.Replace("\\", "\\\\") + ";";
                     grava += dto.pastaOrigem.Replace("\\", "\\\\") + ";";
-                    grava += job.preparaProximaExecucao(dto.horaDaExecucao).ToString("dd/MM/yyyy hh:mm") + ";"; // dto.ProximaExecucao.ToString() + ";";
+                    grava += job.PreparaProximaExecucao(dto.horaDaExecucao).ToString("dd/MM/yyyy hh:mm") + ";"; // dto.ProximaExecucao.ToString() + ";";
                     grava += dto.tiposArquivos + ";";
                     grava += (dto.caminhoCompleto ? "1" : "0") + ";";
                     grava += (dto.ativo ? "1" : "0") + ";";
@@ -73,7 +72,7 @@ namespace nsBackup
             }
         }
 
-        public List<AgendaDto> lerDados()
+        public List<AgendaDto> LerDados()
         {
             List<AgendaDto> lista = new List<AgendaDto>();
             FileStream fs;

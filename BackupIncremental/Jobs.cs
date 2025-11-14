@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Text;
-using System.Timers;
-// using System.Windows.Forms;
 
 namespace nsBackup
 {
-
     public enum Intervalo
     {
         Horario,
@@ -16,8 +11,6 @@ namespace nsBackup
         Mensal
     }
 
-
-
     public class Jobs
     {
         public event EventHandler onStart;
@@ -25,56 +18,55 @@ namespace nsBackup
 
         public bool atualizaAgenda = false;
         Backup backup;
-        System.Timers.Timer horarioExecucao=null;
+        System.Timers.Timer horarioExecucao = null;
 
         public List<AgendaDto> agendas;
         public DateTime ultimaVerificacao;
-       
+
         Agenda agenda;
 
 
-        private void carregaJobs()
+        private void CarregaJobs()
         {
             agenda = new Agenda();
-            agendas = agenda.lerDados();
+            agendas = agenda.LerDados();
             if (agendas.Count == 0)
                 throw new Exception("Não existe Agenda Criada");
 
             for (int i = 0; i < agendas.Count; i++)
             {
-                agendas[i].ProximaExecucao = preparaProximaExecucao(agendas[i].horaDaExecucao);
+                agendas[i].ProximaExecucao = PreparaProximaExecucao(agendas[i].horaDaExecucao);
             }
             atualizaAgenda = false;
         }
 
-        public void start()
+        public void Start()
         {
-            carregaJobs();
+            CarregaJobs();
             horarioExecucao = new System.Timers.Timer();
             horarioExecucao.Interval = 60000; // 1 minuto
-            horarioExecucao.Elapsed += horarioExecucao_Tick;
+            horarioExecucao.Elapsed += HorarioExecucao_Tick;
             horarioExecucao.Enabled = true;
         }
 
-        public DateTime preparaProximaExecucao(string hora)
+        public DateTime PreparaProximaExecucao(string hora)
         {
             DateTime hoje = DateTime.Now.Date;
             DateTime agora = DateTime.Now;
-            
+
             string soData = hoje.ToString().Replace("00:00:00", "").Trim();
             DateTime proxima = Convert.ToDateTime(string.Format("{0} {1}", soData, hora));
             if (proxima < agora) proxima = proxima.AddDays(1);
             return proxima;
         }
 
-        void horarioExecucao_Tick(object sender, EventArgs e)
+        void HorarioExecucao_Tick(object sender, EventArgs e)
         {
-            // bool executou = false;
             horarioExecucao.Enabled = false;
             try
             {
                 if (atualizaAgenda)
-                    carregaJobs();
+                    CarregaJobs();
                 DateTime agora = DateTime.Now;
                 agora = Convert.ToDateTime(Convert.ToDateTime(agora.ToString()).ToString("dd/MM/yyyy HH:mm"));
                 ultimaVerificacao = agora;
@@ -84,7 +76,7 @@ namespace nsBackup
                         continue;
                     if (agora == agendas[i].ProximaExecucao)
                     {
-                        agendas[i] = executaBackup(agendas[i]);
+                        agendas[i] = ExecutaBackup(agendas[i]);
                         // executou = true;
                     }
                 }
@@ -92,20 +84,18 @@ namespace nsBackup
             }
             catch
             {
-
                 throw;
             }
         }
 
-        public AgendaDto executaBackup(AgendaDto dto)
+        public AgendaDto ExecutaBackup(AgendaDto dto)
         {
             if (onStart != null) onStart(this, null);
             backup = new Backup();
             string s = backup.start(dto.pastaOrigem, dto.pastaDestino, dto.tiposArquivos, dto.caminhoCompleto);
-            dto.ProximaExecucao = preparaProximaExecucao(dto.horaDaExecucao);
-            if (onStop != null)  onStop(this, null);
+            dto.ProximaExecucao = PreparaProximaExecucao(dto.horaDaExecucao);
+            if (onStop != null) onStop(this, null);
             return dto;
-
         }
 
 
