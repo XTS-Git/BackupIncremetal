@@ -67,6 +67,7 @@ namespace nsBackup
             {
                 if (atualizaAgenda)
                     CarregaJobs();
+
                 DateTime agora = DateTime.Now;
                 agora = Convert.ToDateTime(Convert.ToDateTime(agora.ToString()).ToString("dd/MM/yyyy HH:mm"));
                 ultimaVerificacao = agora;

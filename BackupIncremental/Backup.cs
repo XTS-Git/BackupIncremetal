@@ -49,8 +49,11 @@ namespace nsBackup
         {
             DirectoryInfo[] conteudoPasta = listaPastas(pCaminhoOrigem);
             string montaCaminho=string.Empty;
-            int i=0;
-            DirectoryInfo d = conteudoPasta[0].Parent;
+            DirectoryInfo d = new DirectoryInfo(pCaminhoOrigem);
+            if (conteudoPasta.Length == 0)
+                return null;
+
+            d = conteudoPasta[0].Parent;
             if (root)
             {
                 while (true)
@@ -75,27 +78,7 @@ namespace nsBackup
         public string start(string pCaminhoOrigem, string pCaminhoDestino, string pTiposArquivos, bool root)
         {
 
-            #region
-            //DirectoryInfo[] conteudoPasta = listaPastas(pCaminhoOrigem);
-            //string montaCaminho=string.Empty;
-            //int i=0;
-            //DirectoryInfo d = conteudoPasta[0].Parent;
-            //while (true)
-            //{
-            //    if (d.Parent != null)
-            //    {
-            //        montaCaminho = string.Format("{0}\\{1}", d.Name, montaCaminho);
-            //        d = d.Parent;
-            //    }
-            //    else
-            //        break;
-            //}
-            //montaCaminho = string.Format("Root\\{0}",montaCaminho);
-            // string montaCaminho = criaRoot(pCaminhoOrigem);
-            // pCaminhoDestino = string.Format("{0}\\{1}", pCaminhoDestino, montaCaminho);
-            #endregion
-
-            pCaminhoDestino = string.Format("{0}\\{1}", pCaminhoDestino, criaRoot(pCaminhoOrigem, root));
+            // pCaminhoDestino = string.Format("{0}\\{1}", pCaminhoDestino, criaRoot(pCaminhoOrigem, root));
             Arquivos.geraLog(string.Format("Inicio Backup {0} Origem: {1} Destino {2}", DateTime.Now, pCaminhoOrigem, pCaminhoDestino));
             backupPasta(pCaminhoOrigem, pCaminhoDestino, pTiposArquivos);
             string a =string.Format("Arquivos Criados {0} - Pastas criadas {1}", arquivosCriados, pastasCriadas);
@@ -110,15 +93,13 @@ namespace nsBackup
             DirectoryInfo[] conteudoPasta = listaPastas(pPastaOrigem);
             for (int i = 0; i < conteudoPasta.Length; i++)
             {
-                string pastaO = string.Format("{0}\\{1}", pPastaOrigem, conteudoPasta[i].Name);
-                string pastaD = string.Format("{0}{1}\\", pPastaDestino, conteudoPasta[i].Name);
+                string pastaOrigem = string.Format("{0}\\{1}", pPastaOrigem, conteudoPasta[i].Name);
+                string pastaDestino = string.Format("{0}{1}\\", pPastaDestino, conteudoPasta[i].Name);
                 if (conteudoPasta[i].Attributes == FileAttributes.Directory)
                 {
-                    criaPasta(pastaD);
-                    backupPasta(pastaO, pastaD, arquivos);
+                    criaPasta(pastaDestino);
+                    backupPasta(pastaOrigem, pastaDestino, arquivos);
                 }
-                // copiaArquivos(pastaO, pastaD, arquivos);
-
             }
         }
 
@@ -133,6 +114,7 @@ namespace nsBackup
                 for (int x = 0; x < filesOrigem.Length; x++)
                 {
                     FileInfo fileOrigem = filesOrigem[x];
+                    if (!destino.EndsWith("\\")) destino += "\\";
                     string arquivoNoDestino = string.Format("{0}{1}", destino, fileOrigem.Name);
                     try
                     {
