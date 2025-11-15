@@ -39,11 +39,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Graph.Core, Version=1.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Graph.Core.1.4.0\lib\net45\Microsoft.Graph.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -56,12 +54,6 @@
   <ItemGroup>
     <Compile Include="agenda.cs" />
     <Compile Include="Backup.cs" />
-    <Compile Include="FrmPrincipal.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmPrincipal.Designer.cs">
-      <DependentUpon>FrmPrincipal.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmAgenda.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -74,17 +66,23 @@
     <Compile Include="frmFiltroTipoArquivo.Designer.cs">
       <DependentUpon>frmFiltroTipoArquivo.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmPrincipal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmPrincipal.Designer.cs">
+      <DependentUpon>FrmPrincipal.cs</DependentUpon>
+    </Compile>
     <Compile Include="Jobs.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="FrmPrincipal.resx">
-      <DependentUpon>FrmPrincipal.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmAgenda.resx">
       <DependentUpon>frmAgenda.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmFiltroTipoArquivo.resx">
       <DependentUpon>frmFiltroTipoArquivo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmPrincipal.resx">
+      <DependentUpon>FrmPrincipal.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -131,6 +129,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="page_white_delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ProjetosCSharp\Uteis\Uteis\Uteis.csproj">
+      <Project>{44aab3a7-f4ac-42f1-bed9-8b056a9256f9}</Project>
+      <Name>Uteis</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
