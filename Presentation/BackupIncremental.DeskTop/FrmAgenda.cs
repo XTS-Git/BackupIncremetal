@@ -16,8 +16,8 @@ namespace nsBackup
             InitializeComponent();
             PopulaComboIntervalo();
             habilitaCampos(false);
-            botoesInicio();
-            populaDataGrid();
+            BotoesInicio();
+            PopulaDataGrid();
         }
 
         private void PopulaComboIntervalo()
@@ -36,7 +36,7 @@ namespace nsBackup
             cmbIntervalo.DataSource = list;
         }
 
-        void populaDataGrid()
+        void PopulaDataGrid()
         {
             dtgAgendas.AutoGenerateColumns = false;
             dtgAgendas.Columns["colHora"].DataPropertyName = nameof(AgendaDto.HoraExecucao);
@@ -66,6 +66,7 @@ namespace nsBackup
             btnPastaOrigem.Enabled = habilita;
             btnTipoArquivo.Enabled = habilita;
             cmbIntervalo.Enabled = habilita;
+            chkAtivo.Checked = habilita;
             if (!habilita)
             {
                 txtHora.Text = string.Empty;
@@ -79,7 +80,7 @@ namespace nsBackup
                 txtHora.Focus();
             }
         }
-        void botoesInicio()
+        void BotoesInicio()
         {
             tsBtnDeletar.Enabled = false;
             tsBtnAdicionar.Enabled = true;
@@ -87,13 +88,13 @@ namespace nsBackup
             tsCancelarEdicao.Enabled = false;
             tsExecutarNow.Enabled = false;
         }
-        void botoesEditar()
+        void BotoesEditar()
         {
             tsBtnAdicionar.Enabled = false;
             tsBtnDeletar.Enabled = false;
             tsBtnSalvar.Enabled = true;
             tsCancelarEdicao.Enabled = true;
-            tsExecutarNow.Enabled = true;
+            tsExecutarNow.Enabled = true;            
         }
         private void btnFechar_Click(object sender, EventArgs e)
         {
@@ -145,7 +146,7 @@ namespace nsBackup
         #endregion
 
 
-        private string listaPastas()
+        private string ListaPastas()
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             DialogResult dr = fbd.ShowDialog();
@@ -161,12 +162,12 @@ namespace nsBackup
 
         private void btnPastaOrigem_Click(object sender, EventArgs e)
         {
-            txtPastaOrigem.Text = listaPastas();
+            txtPastaOrigem.Text = ListaPastas();
         }
 
         private void btnPastaDestino_Click(object sender, EventArgs e)
         {
-            txtPastaDestino.Text = listaPastas();
+            txtPastaDestino.Text = ListaPastas();
         }
 
         private void btnTipoArquivo_Click(object sender, EventArgs e)
@@ -183,7 +184,7 @@ namespace nsBackup
         private void tsBtnAdicionar_Click(object sender, EventArgs e)
         {
             habilitaCampos(true);
-            botoesEditar();
+            BotoesEditar();
         }
 
         private void tsBtnDeletar_Click(object sender, EventArgs e)
@@ -260,14 +261,14 @@ namespace nsBackup
 
             bsAgendas.ResetBindings(false);
 
-            botoesInicio();
+            BotoesInicio();
             habilitaCampos(false);
         }
 
         private void tsCancelarEdicao_Click(object sender, EventArgs e)
         {
 
-            botoesInicio();
+            BotoesInicio();
             habilitaCampos(false);
         }
 
@@ -296,7 +297,7 @@ namespace nsBackup
             }
 
             habilitaCampos(true);
-            botoesEditar();
+            BotoesEditar();
         }
 
         private void dtgAgendas_ColumnHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
