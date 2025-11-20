@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
 
 namespace nsBackup
@@ -29,7 +25,7 @@ namespace nsBackup
             f.criaLista();
             f.ShowDialog();
             return f.retorno;
-            
+
         }
 
         public void criaLista()
@@ -47,9 +43,9 @@ namespace nsBackup
                         checado = true;
                     }
                 }
-                lstTipos.Items.Add(new ListItem(lista[i], lista[i]),checado);
+                lstTipos.Items.Add(new ListItem(lista[i], lista[i]), checado);
             }
-            
+
         }
 
         private List<string> listaExtensoes(string caminho)
@@ -82,14 +78,14 @@ namespace nsBackup
         private List<string> listaPastas(string pPasta)
         {
             List<string> listagem = new List<string>();
-           listagem = filtra(listaExtensoes(pPasta), listagem);
+            listagem = filtra(listaExtensoes(pPasta), listagem);
 
             DirectoryInfo d = new DirectoryInfo(pPasta);
             DirectoryInfo[] f = d.GetDirectories();
             foreach (DirectoryInfo pasta in f)
-	        {
+            {
                 listagem = filtra(listaPastas(pasta.FullName), listagem);
-        	}
+            }
             return listagem;
         }
 
@@ -109,7 +105,7 @@ namespace nsBackup
 
         static Predicate<string> Extensao(string qual)
         {
-            return delegate(string ext)
+            return delegate (string ext)
             {
                 return ext.ToLower() == qual;
             };
@@ -121,7 +117,7 @@ namespace nsBackup
             {
                 if (lstTipos.GetItemChecked(i))
                 {
-                    retorno = string.Format("{0}|{1}",retorno,lstTipos.GetItemText(lstTipos.Items[i]));
+                    retorno = string.Format("{0}|{1}", retorno, lstTipos.GetItemText(lstTipos.Items[i]));
                 }
             }
             retorno = retorno.TrimStart('|').TrimEnd('|');
