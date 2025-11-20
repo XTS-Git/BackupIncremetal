@@ -138,7 +138,7 @@
             // btnTipoArquivo
             // 
             this.btnTipoArquivo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnTipoArquivo.Image = global::nsBackup.Properties.Resources.folder_explore;
+            // this.btnTipoArquivo.Image = global::nsBackup.Properties.Resources.folder_explore;
             this.btnTipoArquivo.Location = new System.Drawing.Point(843, 84);
             this.btnTipoArquivo.Name = "btnTipoArquivo";
             this.btnTipoArquivo.Size = new System.Drawing.Size(39, 23);
@@ -168,7 +168,7 @@
             // btnPastaDestino
             // 
             this.btnPastaDestino.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPastaDestino.Image = global::nsBackup.Properties.Resources.folder_explore;
+            // this.btnPastaDestino.Image = global::nsBackup.Properties.Resources.folder_explore;
             this.btnPastaDestino.Location = new System.Drawing.Point(843, 56);
             this.btnPastaDestino.Name = "btnPastaDestino";
             this.btnPastaDestino.Size = new System.Drawing.Size(39, 23);
@@ -179,7 +179,7 @@
             // btnPastaOrigem
             // 
             this.btnPastaOrigem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPastaOrigem.Image = global::nsBackup.Properties.Resources.folder_explore;
+            // this.btnPastaOrigem.Image = global::nsBackup.Properties.Resources.folder_explore;
             this.btnPastaOrigem.Location = new System.Drawing.Point(843, 30);
             this.btnPastaOrigem.Name = "btnPastaOrigem";
             this.btnPastaOrigem.Size = new System.Drawing.Size(39, 23);
@@ -266,7 +266,7 @@
             // 
             this.tsBtnAdicionar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.tsBtnAdicionar.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsBtnAdicionar.Image = global::nsBackup.Properties.Resources.add;
+            // this.tsBtnAdicionar.Image = global::nsBackup.Properties.Resources.add;
             this.tsBtnAdicionar.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsBtnAdicionar.Name = "tsBtnAdicionar";
             this.tsBtnAdicionar.Size = new System.Drawing.Size(23, 22);
@@ -276,7 +276,7 @@
             // tsBtnDeletar
             // 
             this.tsBtnDeletar.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsBtnDeletar.Image = global::nsBackup.Properties.Resources.delete;
+            // this.tsBtnDeletar.Image = global::nsBackup.Properties.Resources.delete;
             this.tsBtnDeletar.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsBtnDeletar.Name = "tsBtnDeletar";
             this.tsBtnDeletar.Size = new System.Drawing.Size(23, 22);
@@ -286,7 +286,7 @@
             // tsBtnSalvar
             // 
             this.tsBtnSalvar.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsBtnSalvar.Image = global::nsBackup.Properties.Resources.disk;
+            // this.tsBtnSalvar.Image = global::nsBackup.Properties.Resources.disk;
             this.tsBtnSalvar.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsBtnSalvar.Name = "tsBtnSalvar";
             this.tsBtnSalvar.Size = new System.Drawing.Size(23, 22);
@@ -296,7 +296,7 @@
             // tsCancelarEdicao
             // 
             this.tsCancelarEdicao.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsCancelarEdicao.Image = global::nsBackup.Properties.Resources.page_white_delete;
+            // this.tsCancelarEdicao.Image = global::nsBackup.Properties.Resources.page_white_delete;
             this.tsCancelarEdicao.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsCancelarEdicao.Name = "tsCancelarEdicao";
             this.tsCancelarEdicao.Size = new System.Drawing.Size(23, 22);
@@ -387,7 +387,7 @@
             // tsExecutarNow
             // 
             this.tsExecutarNow.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsExecutarNow.Image = global::nsBackup.Properties.Resources.up;
+            // this.tsExecutarNow.Image = global::nsBackup.Properties.Resources.up;
             this.tsExecutarNow.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsExecutarNow.Name = "tsExecutarNow";
             this.tsExecutarNow.Size = new System.Drawing.Size(23, 22);

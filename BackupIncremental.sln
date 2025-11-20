@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04-Infra", "04-Infra", "{D5
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "05-Testes", "05-Testes", "{D1847708-B87A-4F58-B158-0A4C04A367C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackupIncremental.DeskTop", "Presentation\BackupIncremental.DeskTop\BackupIncremental.DeskTop.csproj", "{25989CCC-1523-42D9-931F-7FE57A0AFD0A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,12 +27,17 @@ Global
 		{CFC3D0EE-53A9-4392-B2D4-1E6AF5A8C063}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CFC3D0EE-53A9-4392-B2D4-1E6AF5A8C063}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CFC3D0EE-53A9-4392-B2D4-1E6AF5A8C063}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25989CCC-1523-42D9-931F-7FE57A0AFD0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25989CCC-1523-42D9-931F-7FE57A0AFD0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25989CCC-1523-42D9-931F-7FE57A0AFD0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25989CCC-1523-42D9-931F-7FE57A0AFD0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CFC3D0EE-53A9-4392-B2D4-1E6AF5A8C063} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{25989CCC-1523-42D9-931F-7FE57A0AFD0A} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2AC379FC-EA2B-4355-8918-C0DBE8866A77}

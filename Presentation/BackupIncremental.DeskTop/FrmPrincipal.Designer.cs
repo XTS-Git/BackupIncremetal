@@ -92,7 +92,7 @@
             // tsBtnAgenda
             // 
             this.tsBtnAgenda.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsBtnAgenda.Image = global::nsBackup.Properties.Resources.text_list_bullets;
+            // this.tsBtnAgenda.Image = global::nsBackup.Properties.Resources.text_list_bullets;
             this.tsBtnAgenda.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsBtnAgenda.Name = "tsBtnAgenda";
             this.tsBtnAgenda.Size = new System.Drawing.Size(23, 22);
