@@ -8,7 +8,6 @@ namespace nsBackup
         int X = 0;
         int Y = 0;
         int linhaSelecionada = -1;
-        // List<AgendaDto> tarefas;
         private readonly BindingSource bsAgendas = new();
         public Jobs job;
 
