@@ -1,10 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36623.8 d17.14
+VisualStudioVersion = 17.14.36623.8
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackupIncremental", "BackupIncremental\BackupIncremental.csproj", "{CFC3D0EE-53A9-4392-B2D4-1E6AF5A8C063}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01-Presentation", "01-Presentation", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02-Aplication", "02-Aplication", "{821BFDDE-CF28-4C69-82D6-91B22C01A563}"
@@ -23,10 +21,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CFC3D0EE-53A9-4392-B2D4-1E6AF5A8C063}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CFC3D0EE-53A9-4392-B2D4-1E6AF5A8C063}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CFC3D0EE-53A9-4392-B2D4-1E6AF5A8C063}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CFC3D0EE-53A9-4392-B2D4-1E6AF5A8C063}.Release|Any CPU.Build.0 = Release|Any CPU
 		{25989CCC-1523-42D9-931F-7FE57A0AFD0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{25989CCC-1523-42D9-931F-7FE57A0AFD0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25989CCC-1523-42D9-931F-7FE57A0AFD0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -36,7 +30,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{CFC3D0EE-53A9-4392-B2D4-1E6AF5A8C063} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{25989CCC-1523-42D9-931F-7FE57A0AFD0A} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
