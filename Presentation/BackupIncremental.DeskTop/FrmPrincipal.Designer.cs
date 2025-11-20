@@ -28,100 +28,101 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmPrincipal));
-            this.ntfI = new System.Windows.Forms.NotifyIcon(this.components);
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.rosto = new System.Windows.Forms.SplitContainer();
-            this.ts = new System.Windows.Forms.ToolStrip();
-            this.tsBtnAgenda = new System.Windows.Forms.ToolStripButton();
-            this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.rosto)).BeginInit();
-            this.rosto.Panel1.SuspendLayout();
-            this.rosto.SuspendLayout();
-            this.ts.SuspendLayout();
-            this.SuspendLayout();
+            ntfI = new NotifyIcon(components);
+            panel1 = new Panel();
+            rosto = new SplitContainer();
+            ts = new ToolStrip();
+            tsBtnAgenda = new ToolStripButton();
+            panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)rosto).BeginInit();
+            rosto.Panel1.SuspendLayout();
+            rosto.SuspendLayout();
+            ts.SuspendLayout();
+            SuspendLayout();
             // 
             // ntfI
             // 
-            this.ntfI.Icon = ((System.Drawing.Icon)(resources.GetObject("ntfI.Icon")));
-            this.ntfI.Text = "Backup";
-            this.ntfI.Visible = true;
-            this.ntfI.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ntfI_MouseDoubleClick);
+            ntfI.Icon = (Icon)resources.GetObject("ntfI.Icon");
+            ntfI.Text = "Backup";
+            ntfI.Visible = true;
+            ntfI.MouseDoubleClick += ntfI_MouseDoubleClick;
             // 
             // panel1
             // 
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.rosto);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(620, 415);
-            this.panel1.TabIndex = 0;
+            panel1.BorderStyle = BorderStyle.FixedSingle;
+            panel1.Controls.Add(rosto);
+            panel1.Dock = DockStyle.Fill;
+            panel1.Location = new Point(0, 0);
+            panel1.Margin = new Padding(4, 3, 4, 3);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(723, 479);
+            panel1.TabIndex = 0;
             // 
             // rosto
             // 
-            this.rosto.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rosto.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.rosto.Location = new System.Drawing.Point(0, 0);
-            this.rosto.Margin = new System.Windows.Forms.Padding(0);
-            this.rosto.Name = "rosto";
-            this.rosto.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            rosto.Dock = DockStyle.Fill;
+            rosto.FixedPanel = FixedPanel.Panel1;
+            rosto.Location = new Point(0, 0);
+            rosto.Margin = new Padding(0);
+            rosto.Name = "rosto";
+            rosto.Orientation = Orientation.Horizontal;
             // 
             // rosto.Panel1
             // 
-            this.rosto.Panel1.BackColor = System.Drawing.SystemColors.Control;
-            this.rosto.Panel1.Controls.Add(this.ts);
-            this.rosto.Panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.rosto_Panel1_MouseDown);
-            this.rosto.Panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.rosto_Panel1_MouseMove);
-            this.rosto.Size = new System.Drawing.Size(618, 413);
-            this.rosto.SplitterDistance = 30;
-            this.rosto.SplitterWidth = 1;
-            this.rosto.TabIndex = 0;
+            rosto.Panel1.BackColor = SystemColors.Control;
+            rosto.Panel1.Controls.Add(ts);
+            rosto.Panel1.MouseDown += rosto_Panel1_MouseDown;
+            rosto.Panel1.MouseMove += rosto_Panel1_MouseMove;
+            rosto.Size = new Size(721, 477);
+            rosto.SplitterDistance = 35;
+            rosto.SplitterWidth = 1;
+            rosto.TabIndex = 0;
             // 
             // ts
             // 
-            this.ts.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsBtnAgenda});
-            this.ts.Location = new System.Drawing.Point(0, 0);
-            this.ts.Name = "ts";
-            this.ts.Size = new System.Drawing.Size(618, 25);
-            this.ts.TabIndex = 0;
-            this.ts.Text = "toolStrip1";
+            ts.Items.AddRange(new ToolStripItem[] { tsBtnAgenda });
+            ts.Location = new Point(0, 0);
+            ts.Name = "ts";
+            ts.Size = new Size(721, 25);
+            ts.TabIndex = 0;
+            ts.Text = "toolStrip1";
             // 
             // tsBtnAgenda
             // 
-            this.tsBtnAgenda.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            // this.tsBtnAgenda.Image = global::nsBackup.Properties.Resources.text_list_bullets;
-            this.tsBtnAgenda.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsBtnAgenda.Name = "tsBtnAgenda";
-            this.tsBtnAgenda.Size = new System.Drawing.Size(23, 22);
-            this.tsBtnAgenda.ToolTipText = "Agenda";
-            this.tsBtnAgenda.Click += new System.EventHandler(this.tsBtnAgenda_Click);
+            tsBtnAgenda.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsBtnAgenda.Image = BackupIncremental.DeskTop.Properties.Resources.text_list_bullets;
+            tsBtnAgenda.ImageTransparentColor = Color.Magenta;
+            tsBtnAgenda.Name = "tsBtnAgenda";
+            tsBtnAgenda.Size = new Size(23, 22);
+            tsBtnAgenda.ToolTipText = "Agenda";
+            tsBtnAgenda.Click += tsBtnAgenda_Click;
             // 
             // FrmPrincipal
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(620, 415);
-            this.Controls.Add(this.panel1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "FrmPrincipal";
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Backup (Beta)";
-            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.frmPrincipal_MouseDown);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.frmPrincipal_MouseMove);
-            this.Resize += new System.EventHandler(this.Form1_Resize);
-            this.panel1.ResumeLayout(false);
-            this.rosto.Panel1.ResumeLayout(false);
-            this.rosto.Panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.rosto)).EndInit();
-            this.rosto.ResumeLayout(false);
-            this.ts.ResumeLayout(false);
-            this.ts.PerformLayout();
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(723, 479);
+            Controls.Add(panel1);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            Margin = new Padding(4, 3, 4, 3);
+            Name = "FrmPrincipal";
+            ShowInTaskbar = false;
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Backup (Beta)";
+            MouseDown += frmPrincipal_MouseDown;
+            MouseMove += frmPrincipal_MouseMove;
+            Resize += Form1_Resize;
+            panel1.ResumeLayout(false);
+            rosto.Panel1.ResumeLayout(false);
+            rosto.Panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)rosto).EndInit();
+            rosto.ResumeLayout(false);
+            ts.ResumeLayout(false);
+            ts.PerformLayout();
+            ResumeLayout(false);
 
         }
 

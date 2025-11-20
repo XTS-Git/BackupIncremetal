@@ -3,14 +3,6 @@ using System.Collections.Generic;
 
 namespace nsBackup
 {
-    public enum Intervalo
-    {
-        Horario,
-        Diario,
-        Semanal,
-        Mensal
-    }
-
     public class Jobs
     {
         public event EventHandler onStart;

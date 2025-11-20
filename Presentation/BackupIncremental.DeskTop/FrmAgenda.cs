@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
+﻿using Bkp.Incremental.Application;
 
 namespace nsBackup
 {
@@ -10,33 +8,53 @@ namespace nsBackup
         int X = 0;
         int Y = 0;
         int linhaSelecionada = -1;
-        List<AgendaDto> tarefas;
+        // List<AgendaDto> tarefas;
+        private readonly BindingSource bsAgendas = new();
         public Jobs job;
 
         public FrmAgenda()
         {
             InitializeComponent();
+            PopulaComboIntervalo();
             habilitaCampos(false);
             botoesInicio();
             populaDataGrid();
         }
 
+        private void PopulaComboIntervalo()
+        {
+            var values = Enum.GetValues(typeof(IntervaloEnum)).Cast<IntervaloEnum>();
+            var list = values
+                .Select(v => new
+                {
+                    Value = (int)v,
+                    Text = v.GetDescription()
+                })
+                .ToList();
+
+            cmbIntervalo.DisplayMember = "Text";
+            cmbIntervalo.ValueMember = "Value";
+            cmbIntervalo.DataSource = list;
+        }
+
         void populaDataGrid()
         {
             dtgAgendas.AutoGenerateColumns = false;
-            dtgAgendas.Columns["colHora"].DataPropertyName = "horaDaExecucao";
-            dtgAgendas.Columns["colPastaOrigem"].DataPropertyName = "pastaOrigem";
-            dtgAgendas.Columns["colPastaDestino"].DataPropertyName = "pastaDestino";
-            dtgAgendas.Columns["colTipos"].DataPropertyName = "tiposArquivos";
-            dtgAgendas.Columns["colRoot"].DataPropertyName = "caminhoCompleto";
-            dtgAgendas.Columns["colAtivo"].DataPropertyName = "ativo";
+            dtgAgendas.Columns["colHora"].DataPropertyName = nameof(AgendaDto.HoraExecucao);
+            dtgAgendas.Columns["colPastaOrigem"].DataPropertyName = nameof(AgendaDto.PastaOrigem);
+            dtgAgendas.Columns["colPastaDestino"].DataPropertyName = nameof(AgendaDto.PastaDestino);
+            dtgAgendas.Columns["colTipos"].DataPropertyName = nameof(AgendaDto.TiposArquivos);
+            dtgAgendas.Columns["colRoot"].DataPropertyName = nameof(AgendaDto.CaminhoCompleto);
+            dtgAgendas.Columns["colAtivo"].DataPropertyName = nameof(AgendaDto.Ativo);
+            dtgAgendas.Columns["colIntervalo"].DataPropertyName = nameof(AgendaDto.Intervalo);
             dtgAgendas.DataSource = null;
 
             Agenda agenda = new Agenda();
-            tarefas = agenda.LerDados();
-            tarefas.Sort((x, y) => x.HoraExecucao.CompareTo(y.HoraExecucao));
-            dtgAgendas.DataSource = null;
-            dtgAgendas.DataSource = tarefas;
+            var lista = agenda.LerDados() ?? new List<AgendaDto>();
+            lista.Sort((x, y) => x.HoraExecucao.CompareTo(y.HoraExecucao));
+
+            bsAgendas.DataSource = lista;
+            dtgAgendas.DataSource = bsAgendas;
         }
 
         void habilitaCampos(bool habilita)
@@ -48,6 +66,7 @@ namespace nsBackup
             btnPastaDestino.Enabled = habilita;
             btnPastaOrigem.Enabled = habilita;
             btnTipoArquivo.Enabled = habilita;
+            cmbIntervalo.Enabled = habilita;
             if (!habilita)
             {
                 txtHora.Text = string.Empty;
@@ -131,7 +150,7 @@ namespace nsBackup
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             DialogResult dr = fbd.ShowDialog();
-            if (dr == System.Windows.Forms.DialogResult.OK)
+            if (dr == DialogResult.OK)
             {
                 return fbd.SelectedPath;
             }
@@ -160,7 +179,6 @@ namespace nsBackup
             }
             FrmFiltroTipoArquivo tipos = new FrmFiltroTipoArquivo();
             txtTiposArquivos.Text = FrmFiltroTipoArquivo.buscaExtensoes(txtPastaOrigem.Text, txtTiposArquivos.Text);
-            // tipos.ShowDialog();
         }
 
         private void tsBtnAdicionar_Click(object sender, EventArgs e)
@@ -194,39 +212,54 @@ namespace nsBackup
                 return;
             }
 
-            if ( string.IsNullOrWhiteSpace(txtTiposArquivos.Text)) txtTiposArquivos.Text = "*.*";
+            if (string.IsNullOrWhiteSpace(txtTiposArquivos.Text)) txtTiposArquivos.Text = "*.*";
 
             Agenda agenda = new Agenda();
             AgendaDto dto = new AgendaDto();
-            // Jobs job = new Jobs();
             if (linhaSelecionada == -1)
             {
-                // linhaSelecionada = dtgAgendas.Rows.Add();
                 dto.HoraExecucao = txtHora.Text;
                 dto.PastaOrigem = txtPastaOrigem.Text;
                 dto.PastaDestino = txtPastaDestino.Text;
                 dto.TiposArquivos = txtTiposArquivos.Text;
                 dto.CaminhoCompleto = chkRoot.Checked;
                 dto.Ativo = chkAtivo.Checked;
-                tarefas.Add(dto);
+                if (cmbIntervalo.SelectedValue != null)
+                {
+                    var enumVal = (IntervaloEnum)Enum.ToObject(typeof(IntervaloEnum),(int)cmbIntervalo.SelectedValue);
+                    dto.Intervalo = enumVal.ToString();
+                }
+                var lista = bsAgendas.DataSource as List<AgendaDto>;
+                if (lista == null) lista = new List<AgendaDto>();
+                lista.Add(dto);
+                bsAgendas.DataSource = lista;
             }
             else
             {
-                tarefas = (List<AgendaDto>)dtgAgendas.DataSource;
-                tarefas[linhaSelecionada].HoraExecucao = txtHora.Text;
-                tarefas[linhaSelecionada].PastaOrigem = txtPastaOrigem.Text;
-                tarefas[linhaSelecionada].PastaDestino = txtPastaDestino.Text;
-                tarefas[linhaSelecionada].TiposArquivos = txtTiposArquivos.Text;
-                tarefas[linhaSelecionada].CaminhoCompleto = chkRoot.Checked;
-                tarefas[linhaSelecionada].Ativo = chkAtivo.Checked;
+                var lista = bsAgendas.DataSource as List<AgendaDto>;
+                if (lista != null && linhaSelecionada >= 0 && linhaSelecionada < lista.Count)
+                {
+                    lista[linhaSelecionada].HoraExecucao = txtHora.Text;
+                    lista[linhaSelecionada].PastaOrigem = txtPastaOrigem.Text;
+                    lista[linhaSelecionada].PastaDestino = txtPastaDestino.Text;
+                    lista[linhaSelecionada].TiposArquivos = txtTiposArquivos.Text;
+                    lista[linhaSelecionada].CaminhoCompleto = chkRoot.Checked;
+                    lista[linhaSelecionada].Ativo = chkAtivo.Checked;
+                    if (cmbIntervalo.SelectedValue != null)
+                    {
+                        var enumVal = (IntervaloEnum)Enum.ToObject(typeof(IntervaloEnum), (int)cmbIntervalo.SelectedValue);
+                        lista[linhaSelecionada].Intervalo = enumVal.ToString();
+                    }
+                }
             }
 
-            if (agenda.SalvarDados(tarefas))
+            var currentList = bsAgendas.DataSource as List<AgendaDto> ?? new List<AgendaDto>();
+            if (agenda.SalvarDados(currentList))
             {
                 job.atualizaAgenda = true;
             }
-            dtgAgendas.DataSource = null;
-            dtgAgendas.DataSource = tarefas;
+
+            bsAgendas.ResetBindings(false);
 
             botoesInicio();
             habilitaCampos(false);
@@ -241,52 +274,68 @@ namespace nsBackup
 
         private void dtgAgendas_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if (e.RowIndex >= 0)
-            {
-                linhaSelecionada = e.RowIndex;
-                txtHora.Text = dtgAgendas.Rows[e.RowIndex].Cells["colHora"].Value.ToString();
-                txtPastaDestino.Text = dtgAgendas.Rows[e.RowIndex].Cells["colPastaDestino"].Value.ToString();
-                txtPastaOrigem.Text = dtgAgendas.Rows[e.RowIndex].Cells["colPastaOrigem"].Value.ToString();
-                txtTiposArquivos.Text = dtgAgendas.Rows[e.RowIndex].Cells["colTipos"].Value.ToString();
-                chkRoot.Checked = Convert.ToBoolean(dtgAgendas.Rows[e.RowIndex].Cells["colRoot"].Value.ToString());
-                chkAtivo.Checked = Convert.ToBoolean(dtgAgendas.Rows[e.RowIndex].Cells["colAtivo"].Value.ToString());
-                habilitaCampos(true);
-                botoesEditar();
+            if (e.RowIndex < 0) return;
 
+            linhaSelecionada = e.RowIndex;
+
+            var row = dtgAgendas.Rows[e.RowIndex];
+            var dto = row.DataBoundItem as AgendaDto;
+
+            if (dto == null) return;
+
+            txtHora.Text = dto.HoraExecucao ?? string.Empty;
+            txtPastaDestino.Text = dto.PastaDestino ?? string.Empty;
+            txtPastaOrigem.Text = dto.PastaOrigem ?? string.Empty;
+            txtTiposArquivos.Text = dto.TiposArquivos ?? string.Empty;
+            chkRoot.Checked = dto.CaminhoCompleto;
+            chkAtivo.Checked = dto.Ativo;
+
+            if (!string.IsNullOrEmpty(dto.Intervalo))
+            {
+                if (Enum.TryParse<IntervaloEnum>(dto.Intervalo, out var enumVal))
+                    cmbIntervalo.SelectedValue = (int)enumVal;
             }
+
+            habilitaCampos(true);
+            botoesEditar();
         }
 
         private void dtgAgendas_ColumnHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if (e.RowIndex >= 0 || dtgAgendas.Rows.Count > 0)
-            {
-                string nomeColuna = dtgAgendas.Columns[e.ColumnIndex].Name;
-                if (nomeColuna.Equals("colHora"))
-                    tarefas.Sort((x, y) => x.HoraExecucao.CompareTo(y.HoraExecucao));
-                else if (nomeColuna.Equals("colPastaOrigem"))
-                    tarefas.Sort((x, y) => x.PastaOrigem.CompareTo(y.PastaOrigem));
-                else if (nomeColuna.Equals("colPastaDestino"))
-                    tarefas.Sort((x, y) => x.PastaDestino.CompareTo(y.PastaDestino));
-                else if (nomeColuna.Equals("colTipos"))
-                    tarefas.Sort((x, y) => x.TiposArquivos.CompareTo(y.TiposArquivos));
-                else if (nomeColuna.Equals("colRoot"))
-                    tarefas.Sort((x, y) => x.CaminhoCompleto.CompareTo(y.CaminhoCompleto));
-                else if (nomeColuna.Equals("colAtivo"))
-                    tarefas.Sort((x, y) => x.Ativo.CompareTo(y.Ativo));
-                dtgAgendas.DataSource = null;
-                dtgAgendas.DataSource = tarefas;
-            }
+            if (dtgAgendas.Rows.Count == 0) return;
+
+            var nomeColuna = dtgAgendas.Columns[e.ColumnIndex].Name;
+            var lista = bsAgendas.DataSource as List<AgendaDto>;
+            if (lista == null) return;
+
+            if (nomeColuna.Equals("colHora"))
+                lista.Sort((x, y) => x.HoraExecucao.CompareTo(y.HoraExecucao));
+            else if (nomeColuna.Equals("colPastaOrigem"))
+                lista.Sort((x, y) => x.PastaOrigem.CompareTo(y.PastaOrigem));
+            else if (nomeColuna.Equals("colPastaDestino"))
+                lista.Sort((x, y) => x.PastaDestino.CompareTo(y.PastaDestino));
+            else if (nomeColuna.Equals("colTipos"))
+                lista.Sort((x, y) => x.TiposArquivos.CompareTo(y.TiposArquivos));
+            else if (nomeColuna.Equals("colRoot"))
+                lista.Sort((x, y) => x.CaminhoCompleto.CompareTo(y.CaminhoCompleto));
+            else if (nomeColuna.Equals("colAtivo"))
+                lista.Sort((x, y) => x.Ativo.CompareTo(y.Ativo));
+
+            bsAgendas.ResetBindings(false);
         }
 
         private void tsExecutarNow_Click(object sender, EventArgs e)
         {
-            AgendaDto dto = new AgendaDto();
-            dto.HoraExecucao = txtHora.Text;
-            dto.PastaOrigem = txtPastaOrigem.Text;
-            dto.PastaDestino = txtPastaDestino.Text;
-            dto.TiposArquivos = txtTiposArquivos.Text;
-            dto.CaminhoCompleto = chkRoot.Checked;
-            dto.Ativo = chkAtivo.Checked;
+            var dto = new AgendaDto
+            {
+                HoraExecucao = txtHora.Text,
+                PastaOrigem = txtPastaOrigem.Text,
+                PastaDestino = txtPastaDestino.Text,
+                TiposArquivos = txtTiposArquivos.Text,
+                CaminhoCompleto = chkRoot.Checked,
+                Ativo = chkAtivo.Checked
+            };
+
             Jobs job = new Jobs();
             job.ExecutaBackup(dto);
 

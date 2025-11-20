@@ -10,7 +10,7 @@ namespace nsBackup
     {
         public DateTime ProximaExecucao { get; set; }
         public string HoraExecucao { get; set; }
-        public string TipoExecucao { get; set; }
+        public string Intervalo { get; set; }
         public string PastaOrigem { get; set; }
         public string PastaDestino { get; set; }
         public string TiposArquivos { get; set; }
