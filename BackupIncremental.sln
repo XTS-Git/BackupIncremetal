@@ -1,11 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.33027.164
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36623.8 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackupIncremental", "BackupIncremental\BackupIncremental.csproj", "{CFC3D0EE-53A9-4392-B2D4-1E6AF5A8C063}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uteis", "..\ProjetosCSharp\Uteis\Uteis\Uteis.csproj", "{44AAB3A7-F4AC-42F1-BED9-8B056A9256F9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01-Presentation", "01-Presentation", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02-Aplication", "02-Aplication", "{821BFDDE-CF28-4C69-82D6-91B22C01A563}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03-Domain", "03-Domain", "{60443B61-312D-4F53-BBC5-98FF56A21A84}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04-Infra", "04-Infra", "{D5DA64BE-9F99-4F8E-9398-B1B2831CFC04}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "05-Testes", "05-Testes", "{D1847708-B87A-4F58-B158-0A4C04A367C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,13 +25,12 @@ Global
 		{CFC3D0EE-53A9-4392-B2D4-1E6AF5A8C063}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CFC3D0EE-53A9-4392-B2D4-1E6AF5A8C063}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CFC3D0EE-53A9-4392-B2D4-1E6AF5A8C063}.Release|Any CPU.Build.0 = Release|Any CPU
-		{44AAB3A7-F4AC-42F1-BED9-8B056A9256F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{44AAB3A7-F4AC-42F1-BED9-8B056A9256F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{44AAB3A7-F4AC-42F1-BED9-8B056A9256F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{44AAB3A7-F4AC-42F1-BED9-8B056A9256F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CFC3D0EE-53A9-4392-B2D4-1E6AF5A8C063} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2AC379FC-EA2B-4355-8918-C0DBE8866A77}

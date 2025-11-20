@@ -1,25 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Text;
 using System.Windows.Forms;
-using XTS.Tools;
 
 namespace nsBackup
 {
-    public partial class frmAgenda : Form
+    public partial class FrmAgenda : Form
     {
 
         int X = 0;
         int Y = 0;
-        int linhaSelecionada=-1;
+        int linhaSelecionada = -1;
         List<AgendaDto> tarefas;
         public Jobs job;
 
-        public frmAgenda()
+        public FrmAgenda()
         {
             InitializeComponent();
             habilitaCampos(false);
@@ -40,7 +34,7 @@ namespace nsBackup
 
             Agenda agenda = new Agenda();
             tarefas = agenda.LerDados();
-            tarefas.Sort((x, y) => x.horaDaExecucao.CompareTo(y.horaDaExecucao));
+            tarefas.Sort((x, y) => x.HoraExecucao.CompareTo(y.HoraExecucao));
             dtgAgendas.DataSource = null;
             dtgAgendas.DataSource = tarefas;
         }
@@ -164,8 +158,8 @@ namespace nsBackup
                 MessageBox.Show("Para criar uma seleção para tipos de arquivos é necessário informar a pasta de origem.");
                 return;
             }
-            frmFiltroTipoArquivo tipos = new frmFiltroTipoArquivo();
-            txtTiposArquivos.Text = frmFiltroTipoArquivo.buscaExtensoes(txtPastaOrigem.Text, txtTiposArquivos.Text);
+            FrmFiltroTipoArquivo tipos = new FrmFiltroTipoArquivo();
+            txtTiposArquivos.Text = FrmFiltroTipoArquivo.buscaExtensoes(txtPastaOrigem.Text, txtTiposArquivos.Text);
             // tipos.ShowDialog();
         }
 
@@ -188,19 +182,19 @@ namespace nsBackup
                 return;
             }
 
-            if( txtPastaOrigem.Text == string.Empty )
+            if (txtPastaOrigem.Text == string.Empty)
             {
                 MessageBox.Show("Informe a pasta de origem !");
                 return;
             }
 
-            if ( txtPastaDestino.Text == string.Empty)
+            if (txtPastaDestino.Text == string.Empty)
             {
                 MessageBox.Show("Informe a pasta de destino !");
                 return;
             }
 
-            if (txtTiposArquivos.Text.isNullOrEmpty()) txtTiposArquivos.Text = "*.*";
+            if ( string.IsNullOrWhiteSpace(txtTiposArquivos.Text)) txtTiposArquivos.Text = "*.*";
 
             Agenda agenda = new Agenda();
             AgendaDto dto = new AgendaDto();
@@ -208,26 +202,26 @@ namespace nsBackup
             if (linhaSelecionada == -1)
             {
                 // linhaSelecionada = dtgAgendas.Rows.Add();
-                dto.horaDaExecucao = txtHora.Text;
-                dto.pastaOrigem = txtPastaOrigem.Text;
-                dto.pastaDestino = txtPastaDestino.Text;
-                dto.tiposArquivos = txtTiposArquivos.Text;
-                dto.caminhoCompleto = chkRoot.Checked;
-                dto.ativo = chkAtivo.Checked;
+                dto.HoraExecucao = txtHora.Text;
+                dto.PastaOrigem = txtPastaOrigem.Text;
+                dto.PastaDestino = txtPastaDestino.Text;
+                dto.TiposArquivos = txtTiposArquivos.Text;
+                dto.CaminhoCompleto = chkRoot.Checked;
+                dto.Ativo = chkAtivo.Checked;
                 tarefas.Add(dto);
             }
             else
             {
                 tarefas = (List<AgendaDto>)dtgAgendas.DataSource;
-                tarefas[linhaSelecionada].horaDaExecucao = txtHora.Text;
-                tarefas[linhaSelecionada].pastaOrigem = txtPastaOrigem.Text;
-                tarefas[linhaSelecionada].pastaDestino = txtPastaDestino.Text;
-                tarefas[linhaSelecionada].tiposArquivos = txtTiposArquivos.Text;
-                tarefas[linhaSelecionada].caminhoCompleto = chkRoot.Checked;
-                tarefas[linhaSelecionada].ativo = chkAtivo.Checked;
+                tarefas[linhaSelecionada].HoraExecucao = txtHora.Text;
+                tarefas[linhaSelecionada].PastaOrigem = txtPastaOrigem.Text;
+                tarefas[linhaSelecionada].PastaDestino = txtPastaDestino.Text;
+                tarefas[linhaSelecionada].TiposArquivos = txtTiposArquivos.Text;
+                tarefas[linhaSelecionada].CaminhoCompleto = chkRoot.Checked;
+                tarefas[linhaSelecionada].Ativo = chkAtivo.Checked;
             }
 
-            if (agenda.SalvaDados(tarefas))
+            if (agenda.SalvarDados(tarefas))
             {
                 job.atualizaAgenda = true;
             }
@@ -267,18 +261,18 @@ namespace nsBackup
             if (e.RowIndex >= 0 || dtgAgendas.Rows.Count > 0)
             {
                 string nomeColuna = dtgAgendas.Columns[e.ColumnIndex].Name;
-                if ( nomeColuna.Equals("colHora") )
-                   tarefas.Sort((x, y) => x.horaDaExecucao.CompareTo(y.horaDaExecucao));
-                else if ( nomeColuna.Equals("colPastaOrigem") )
-                   tarefas.Sort((x, y) => x.pastaOrigem.CompareTo(y.pastaOrigem));
-                else if ( nomeColuna.Equals("colPastaDestino") )
-                   tarefas.Sort((x, y) => x.pastaDestino.CompareTo(y.pastaDestino));
-                else if ( nomeColuna.Equals("colTipos") )
-                   tarefas.Sort((x, y) => x.tiposArquivos.CompareTo(y.tiposArquivos));
-                else if ( nomeColuna.Equals("colRoot") )
-                   tarefas.Sort((x, y) => x.caminhoCompleto.CompareTo(y.caminhoCompleto));
-                else if ( nomeColuna.Equals("colAtivo") )
-                   tarefas.Sort((x, y) => x.ativo.CompareTo(y.ativo));
+                if (nomeColuna.Equals("colHora"))
+                    tarefas.Sort((x, y) => x.HoraExecucao.CompareTo(y.HoraExecucao));
+                else if (nomeColuna.Equals("colPastaOrigem"))
+                    tarefas.Sort((x, y) => x.PastaOrigem.CompareTo(y.PastaOrigem));
+                else if (nomeColuna.Equals("colPastaDestino"))
+                    tarefas.Sort((x, y) => x.PastaDestino.CompareTo(y.PastaDestino));
+                else if (nomeColuna.Equals("colTipos"))
+                    tarefas.Sort((x, y) => x.TiposArquivos.CompareTo(y.TiposArquivos));
+                else if (nomeColuna.Equals("colRoot"))
+                    tarefas.Sort((x, y) => x.CaminhoCompleto.CompareTo(y.CaminhoCompleto));
+                else if (nomeColuna.Equals("colAtivo"))
+                    tarefas.Sort((x, y) => x.Ativo.CompareTo(y.Ativo));
                 dtgAgendas.DataSource = null;
                 dtgAgendas.DataSource = tarefas;
             }
@@ -287,12 +281,12 @@ namespace nsBackup
         private void tsExecutarNow_Click(object sender, EventArgs e)
         {
             AgendaDto dto = new AgendaDto();
-            dto.horaDaExecucao = txtHora.Text;
-            dto.pastaOrigem = txtPastaOrigem.Text;
-            dto.pastaDestino = txtPastaDestino.Text;
-            dto.tiposArquivos = txtTiposArquivos.Text;
-            dto.caminhoCompleto = chkRoot.Checked;
-            dto.ativo = chkAtivo.Checked;
+            dto.HoraExecucao = txtHora.Text;
+            dto.PastaOrigem = txtPastaOrigem.Text;
+            dto.PastaDestino = txtPastaDestino.Text;
+            dto.TiposArquivos = txtTiposArquivos.Text;
+            dto.CaminhoCompleto = chkRoot.Checked;
+            dto.Ativo = chkAtivo.Checked;
             Jobs job = new Jobs();
             job.ExecutaBackup(dto);
 

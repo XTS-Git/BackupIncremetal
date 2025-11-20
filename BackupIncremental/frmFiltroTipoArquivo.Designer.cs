@@ -1,6 +1,6 @@
 ﻿namespace nsBackup
 {
-    partial class frmFiltroTipoArquivo
+    partial class FrmFiltroTipoArquivo
     {
         /// <summary>
         /// Required designer variable.

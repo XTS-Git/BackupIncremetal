@@ -53,18 +53,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="agenda.cs" />
+    <Compile Include="Arquivos.cs" />
     <Compile Include="Backup.cs" />
-    <Compile Include="frmAgenda.cs">
+    <Compile Include="FrmAgenda.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmAgenda.Designer.cs">
-      <DependentUpon>frmAgenda.cs</DependentUpon>
+    <Compile Include="FrmAgenda.Designer.cs">
+      <DependentUpon>FrmAgenda.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmFiltroTipoArquivo.cs">
+    <Compile Include="FrmFiltroTipoArquivo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmFiltroTipoArquivo.Designer.cs">
-      <DependentUpon>frmFiltroTipoArquivo.cs</DependentUpon>
+    <Compile Include="FrmFiltroTipoArquivo.Designer.cs">
+      <DependentUpon>FrmFiltroTipoArquivo.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmPrincipal.cs">
       <SubType>Form</SubType>
@@ -75,11 +76,11 @@
     <Compile Include="Jobs.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="frmAgenda.resx">
-      <DependentUpon>frmAgenda.cs</DependentUpon>
+    <EmbeddedResource Include="FrmAgenda.resx">
+      <DependentUpon>FrmAgenda.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmFiltroTipoArquivo.resx">
-      <DependentUpon>frmFiltroTipoArquivo.cs</DependentUpon>
+    <EmbeddedResource Include="FrmFiltroTipoArquivo.resx">
+      <DependentUpon>FrmFiltroTipoArquivo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmPrincipal.resx">
       <DependentUpon>FrmPrincipal.cs</DependentUpon>
@@ -129,12 +130,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="page_white_delete.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\ProjetosCSharp\Uteis\Uteis\Uteis.csproj">
-      <Project>{44aab3a7-f4ac-42f1-bed9-8b056a9256f9}</Project>
-      <Name>Uteis</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -9,19 +9,19 @@ namespace nsBackup
     public class AgendaDto
     {
         public DateTime ProximaExecucao { get; set; }
-        public string horaDaExecucao { get; set; }
-        public string pastaOrigem { get; set; }
-        public string pastaDestino { get; set; }
-        public string tiposArquivos { get; set; }
-        public bool caminhoCompleto { get; set; }
-        public bool ativo { get; set; }
+        public string HoraExecucao { get; set; }
+        public string TipoExecucao { get; set; }
+        public string PastaOrigem { get; set; }
+        public string PastaDestino { get; set; }
+        public string TiposArquivos { get; set; }
+        public bool CaminhoCompleto { get; set; }
+        public DateTime UltimaExecucao { get; set; }
+        public bool Ativo { get; set; }
     }
 
     public class Agenda
     {
-        // string pastaArquivoAgenda = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-        string arquivoDados = string.Format(@"{0}\Backup\job.dat", Environment.GetFolderPath(Environment.SpecialFolder.Personal));
-
+        string arquivoDados = string.Format(@"{0}\Backup\job.json", Environment.GetFolderPath(Environment.SpecialFolder.Personal));
 
         public Agenda()
         {
@@ -36,36 +36,16 @@ namespace nsBackup
         }
         public event EventHandler EnviaMsgAgendaAtualizada;
 
-        public bool SalvaDados(List<AgendaDto> dados)
+        public bool SalvarDados(List<AgendaDto> dados)
         {
             try
             {
-                Jobs job = new Jobs();
-                FileStream fs;
-                if (File.Exists(arquivoDados)) File.Delete(arquivoDados);
-                fs = File.Create(arquivoDados);
-                StreamWriter sw = new StreamWriter(fs);
-
-                for (int i = 0; i < dados.Count; i++)
-                {
-                    AgendaDto dto = dados[i];
-                    string grava = string.Empty;
-                    grava = dto.horaDaExecucao + ";";
-                    grava += dto.pastaDestino.Replace("\\", "\\\\") + ";";
-                    grava += dto.pastaOrigem.Replace("\\", "\\\\") + ";";
-                    grava += job.PreparaProximaExecucao(dto.horaDaExecucao).ToString("dd/MM/yyyy hh:mm") + ";"; // dto.ProximaExecucao.ToString() + ";";
-                    grava += dto.tiposArquivos + ";";
-                    grava += (dto.caminhoCompleto ? "1" : "0") + ";";
-                    grava += (dto.ativo ? "1" : "0") + ";";
-                    sw.WriteLine(grava);
-                }
-                sw.Close();
-                fs.Close();
-                // agendaAtualizada = true;
+                string json = Newtonsoft.Json.JsonConvert.SerializeObject(dados);
+                File.WriteAllText(arquivoDados, json);
                 if (EnviaMsgAgendaAtualizada != null) EnviaMsgAgendaAtualizada(null, null);
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
                 return false;
@@ -74,32 +54,76 @@ namespace nsBackup
 
         public List<AgendaDto> LerDados()
         {
-            List<AgendaDto> lista = new List<AgendaDto>();
-            FileStream fs;
-            bool existe = false;
             if (!File.Exists(arquivoDados)) return new List<AgendaDto>();
-
-            fs = File.Open(arquivoDados, FileMode.Open);
-
-            StreamReader sr = new StreamReader(fs);
-            while (!sr.EndOfStream)
-            {
-                string linha = sr.ReadLine();
-                string[] dados = linha.Split(';');
-                AgendaDto dto = new AgendaDto();
-                dto.horaDaExecucao =dados[0];
-                dto.pastaDestino = dados[1].Replace("\\\\", "\\");
-                dto.pastaOrigem = dados[2].Replace("\\\\", "\\");
-                dto.ProximaExecucao= Convert.ToDateTime(dados[3]);
-                dto.tiposArquivos = dados[4];
-                dto.caminhoCompleto = (dados[5]=="1"?true:false);
-                dto.ativo = (dados[6] == "1" ? true : false);
-                lista.Add(dto);
-            }
-            sr.Close();
-            fs.Close();
+            string json = File.ReadAllText(arquivoDados);
+            List<AgendaDto> lista = Newtonsoft.Json.JsonConvert.DeserializeObject<List<AgendaDto>>(json);
             return lista;
         }
+
+        //public bool SalvaDados(List<AgendaDto> dados)
+        //{
+        //    try
+        //    {
+        //        Jobs job = new Jobs();
+        //        FileStream fs;
+        //        if (File.Exists(arquivoDados)) File.Delete(arquivoDados);
+        //        fs = File.Create(arquivoDados);
+        //        StreamWriter sw = new StreamWriter(fs);
+
+        //        for (int i = 0; i < dados.Count; i++)
+        //        {
+        //            AgendaDto dto = dados[i];
+        //            string grava = string.Empty;
+        //            grava = dto.HoraExecucao + ";";
+        //            grava += dto.PastaDestino.Replace("\\", "\\\\") + ";";
+        //            grava += dto.PastaOrigem.Replace("\\", "\\\\") + ";";
+        //            grava += job.PreparaProximaExecucao(dto.HoraExecucao).ToString("dd/MM/yyyy hh:mm") + ";"; // dto.ProximaExecucao.ToString() + ";";
+        //            grava += dto.TiposArquivos + ";";
+        //            grava += (dto.CaminhoCompleto ? "1" : "0") + ";";
+        //            grava += (dto.Ativo ? "1" : "0") + ";";
+        //            sw.WriteLine(grava);
+        //        }
+        //        sw.Close();
+        //        fs.Close();
+        //        // agendaAtualizada = true;
+        //        if (EnviaMsgAgendaAtualizada != null) EnviaMsgAgendaAtualizada(null, null);
+        //        return true;
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        MessageBox.Show(ex.Message);
+        //        return false;
+        //    }
+        //}
+
+        //public List<AgendaDto> LerDados()
+        //{
+        //    List<AgendaDto> lista = new List<AgendaDto>();
+        //    FileStream fs;
+        //    bool existe = false;
+        //    if (!File.Exists(arquivoDados)) return new List<AgendaDto>();
+
+        //    fs = File.Open(arquivoDados, FileMode.Open);
+
+        //    StreamReader sr = new StreamReader(fs);
+        //    while (!sr.EndOfStream)
+        //    {
+        //        string linha = sr.ReadLine();
+        //        string[] dados = linha.Split(';');
+        //        AgendaDto dto = new AgendaDto();
+        //        dto.HoraExecucao =dados[0];
+        //        dto.PastaDestino = dados[1].Replace("\\\\", "\\");
+        //        dto.PastaOrigem = dados[2].Replace("\\\\", "\\");
+        //        dto.ProximaExecucao= Convert.ToDateTime(dados[3]);
+        //        dto.TiposArquivos = dados[4];
+        //        dto.CaminhoCompleto = (dados[5]=="1"?true:false);
+        //        dto.Ativo = (dados[6] == "1" ? true : false);
+        //        lista.Add(dto);
+        //    }
+        //    sr.Close();
+        //    fs.Close();
+        //    return lista;
+        //}
 
     }
 }

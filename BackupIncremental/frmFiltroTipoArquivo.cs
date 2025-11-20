@@ -9,13 +9,13 @@ using System.Windows.Forms;
 
 namespace nsBackup
 {
-    public partial class frmFiltroTipoArquivo : Form
+    public partial class FrmFiltroTipoArquivo : Form
     {
         public string caminhoOrigem = string.Empty;
         public string selecionados = string.Empty;
         public string retorno = string.Empty;
 
-        public frmFiltroTipoArquivo()
+        public FrmFiltroTipoArquivo()
         {
             InitializeComponent();
         }
@@ -23,7 +23,7 @@ namespace nsBackup
 
         static public string buscaExtensoes(string pCaminhoOrigem, string pSelecionados)
         {
-            frmFiltroTipoArquivo f = new frmFiltroTipoArquivo();
+            FrmFiltroTipoArquivo f = new FrmFiltroTipoArquivo();
             f.caminhoOrigem = pCaminhoOrigem;
             f.selecionados = pSelecionados;
             f.criaLista();

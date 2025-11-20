@@ -1,44 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Net;
-using System.Net.Mail;
-using System.Text;
-using System.Windows.Forms;
-using XTS;
-using XTS.Tools;
 
 namespace nsBackup
 {
     public class Backup
     {
         DirectoryInfo dir;
-        int arquivosCriados=0;
-        int pastasCriadas=0;
+        int arquivosCriados = 0;
+        int pastasCriadas = 0;
         // Arquivos log = null;
         string arquivoLog = "";
 
-        public void enviaEmail(string m)
-        {
-            SmtpClient client = new SmtpClient("smtp.gmail.com"); // 465 587
-            client.UseDefaultCredentials = false;
-            client.Timeout = 10000;
-            client.EnableSsl = true;
-            client.Port = 587;
-            client.Credentials = new NetworkCredential("rcosta.horadocha@gmail.com", "river1234");
-            MailMessage mensagemEmail = new MailMessage();
-            MailAddress addresFrom = new MailAddress("rcosta.horadocha@gmail.com","Ricardo Costa");
-            mensagemEmail.Subject = "Backup Agendado H.A.C.";
-            mensagemEmail.BodyEncoding = UTF8Encoding.UTF8;
-            mensagemEmail.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
-            mensagemEmail.Body = m;
-            mensagemEmail.From = addresFrom;
-            mensagemEmail.IsBodyHtml = true;
-            mensagemEmail.To.Add("exatos@gmail.com");
-            // mensagemEmail.To.Add("ricardo.costa@anacosta.com.br");
-            client.Send(mensagemEmail);
+        //public void enviaEmail(string m)
+        //{
+        //    SmtpClient client = new SmtpClient("smtp.gmail.com"); // 465 587
+        //    client.UseDefaultCredentials = false;
+        //    client.Timeout = 10000;
+        //    client.EnableSsl = true;
+        //    client.Port = 587;
+        //    client.Credentials = new NetworkCredential("rcosta.horadocha@gmail.com", "river1234");
+        //    MailMessage mensagemEmail = new MailMessage();
+        //    MailAddress addresFrom = new MailAddress("rcosta.horadocha@gmail.com", "Ricardo Costa");
+        //    mensagemEmail.Subject = "Backup Agendado H.A.C.";
+        //    mensagemEmail.BodyEncoding = UTF8Encoding.UTF8;
+        //    mensagemEmail.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
+        //    mensagemEmail.Body = m;
+        //    mensagemEmail.From = addresFrom;
+        //    mensagemEmail.IsBodyHtml = true;
+        //    mensagemEmail.To.Add("exatos@gmail.com");
+        //    client.Send(mensagemEmail);
 
-        }
+        //}
 
         /// <summary>
         /// Monta caminho para pasta de maior nivel na raiz do caminho original
@@ -48,7 +40,7 @@ namespace nsBackup
         private string criaRoot(string pCaminhoOrigem, bool root)
         {
             DirectoryInfo[] conteudoPasta = listaPastas(pCaminhoOrigem);
-            string montaCaminho=string.Empty;
+            string montaCaminho = string.Empty;
             DirectoryInfo d = new DirectoryInfo(pCaminhoOrigem);
             if (conteudoPasta.Length == 0)
                 return null;
@@ -70,18 +62,16 @@ namespace nsBackup
             }
             else
             {
-                montaCaminho = string.Format("{0}\\",d.Name);
+                montaCaminho = string.Format("{0}\\", d.Name);
             }
             return montaCaminho;
         }
 
         public string start(string pCaminhoOrigem, string pCaminhoDestino, string pTiposArquivos, bool root)
         {
-
-            // pCaminhoDestino = string.Format("{0}\\{1}", pCaminhoDestino, criaRoot(pCaminhoOrigem, root));
             Arquivos.geraLog(string.Format("Inicio Backup {0} Origem: {1} Destino {2}", DateTime.Now, pCaminhoOrigem, pCaminhoDestino));
             backupPasta(pCaminhoOrigem, pCaminhoDestino, pTiposArquivos);
-            string a =string.Format("Arquivos Criados {0} - Pastas criadas {1}", arquivosCriados, pastasCriadas);
+            string a = string.Format("Arquivos Criados {0} - Pastas criadas {1}", arquivosCriados, pastasCriadas);
             Arquivos.geraLog(a);
             Arquivos.geraLog(string.Format("Fim Backup {0}", DateTime.Now));
             return a;
@@ -134,7 +124,7 @@ namespace nsBackup
                     }
                     catch (Exception exCopia)
                     {
-                        Arquivos.geraLog(string.Format("Erro criando o arquivo {0}: {1}",arquivoNoDestino, exCopia.Message));
+                        Arquivos.geraLog(string.Format("Erro criando o arquivo {0}: {1}", arquivoNoDestino, exCopia.Message));
                     }
                 }
             }
@@ -201,7 +191,7 @@ namespace nsBackup
         //    }
         //    return fi;
         //}
-        
+
         //public bool arquivoDestinoAntigo(FileInfo origem, FileInfo destino)
         //{
         //    DateTime o = origem.CreationTime;

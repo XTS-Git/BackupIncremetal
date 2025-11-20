@@ -35,7 +35,7 @@ namespace nsBackup
 
             for (int i = 0; i < agendas.Count; i++)
             {
-                agendas[i].ProximaExecucao = PreparaProximaExecucao(agendas[i].horaDaExecucao);
+                agendas[i].ProximaExecucao = PreparaProximaExecucao(agendas[i].HoraExecucao);
             }
             atualizaAgenda = false;
         }
@@ -73,7 +73,7 @@ namespace nsBackup
                 ultimaVerificacao = agora;
                 for (int i = 0; i < agendas.Count; i++)
                 {
-                    if (!agendas[i].ativo)
+                    if (!agendas[i].Ativo)
                         continue;
                     if (agora == agendas[i].ProximaExecucao)
                     {
@@ -93,8 +93,8 @@ namespace nsBackup
         {
             if (onStart != null) onStart(this, null);
             backup = new Backup();
-            string s = backup.start(dto.pastaOrigem, dto.pastaDestino, dto.tiposArquivos, dto.caminhoCompleto);
-            dto.ProximaExecucao = PreparaProximaExecucao(dto.horaDaExecucao);
+            string s = backup.start(dto.PastaOrigem, dto.PastaDestino, dto.TiposArquivos, dto.CaminhoCompleto);
+            dto.ProximaExecucao = PreparaProximaExecucao(dto.HoraExecucao);
             if (onStop != null) onStop(this, null);
             return dto;
         }

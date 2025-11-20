@@ -1,6 +1,6 @@
 ﻿namespace nsBackup
 {
-    partial class frmAgenda
+    partial class FrmAgenda
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAgenda));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmAgenda));
             this.panel1 = new System.Windows.Forms.Panel();
             this.rosto = new System.Windows.Forms.SplitContainer();
             this.chkAtivo = new System.Windows.Forms.CheckBox();

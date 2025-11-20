@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using XTS.Tools;
 
 namespace nsBackup
 {
@@ -111,7 +110,7 @@ namespace nsBackup
 
         private void tsBtnAgenda_Click(object sender, EventArgs e)
         {
-            frmAgenda agenda = new frmAgenda();
+            FrmAgenda agenda = new FrmAgenda();
             agenda.job = job;
             agenda.ShowDialog(this);
         }
