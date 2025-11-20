@@ -91,7 +91,7 @@ namespace nsBackup
         void BotoesEditar()
         {
             tsBtnAdicionar.Enabled = false;
-            tsBtnDeletar.Enabled = false;
+            tsBtnDeletar.Enabled = true;
             tsBtnSalvar.Enabled = true;
             tsCancelarEdicao.Enabled = true;
             tsExecutarNow.Enabled = true;            
@@ -189,7 +189,57 @@ namespace nsBackup
 
         private void tsBtnDeletar_Click(object sender, EventArgs e)
         {
+            int index = linhaSelecionada;
+            if (index < 0 && dtgAgendas.CurrentRow != null)
+                index = dtgAgendas.CurrentRow.Index;
 
+            if (index < 0)
+            {
+                MessageBox.Show("Selecione uma tarefa para excluir.", "Excluir tarefa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var lista = bsAgendas.DataSource as List<AgendaDto>;
+            if (lista == null || index < 0 || index >= lista.Count)
+            {
+                MessageBox.Show("Seleção inválida.", "Excluir tarefa", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var dto = lista[index];
+            var confirm = MessageBox.Show(
+                $"Confirma exclusão da tarefa?\n\nHora: {dto.HoraExecucao}\nOrigem: {dto.PastaOrigem}\nDestino: {dto.PastaDestino}",
+                "Confirmar exclusão",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (confirm != DialogResult.Yes)
+                return;
+
+            lista.RemoveAt(index);
+            Agenda agenda = new Agenda();
+            try
+            {
+                if (agenda.SalvarDados(lista))
+                {
+                    if (job != null) job.atualizaAgenda = true;
+                }
+                else
+                {
+                    MessageBox.Show("Falha ao salvar alterações da agenda.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao excluir tarefa: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            // atualiza binding e UI
+            bsAgendas.DataSource = lista;
+            bsAgendas.ResetBindings(false);
+            linhaSelecionada = -1;
+            habilitaCampos(false);
+            BotoesInicio();
         }
 
         private void tsBtnSalvar_Click(object sender, EventArgs e)

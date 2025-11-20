@@ -40,7 +40,7 @@ namespace nsBackup
         {
             try
             {
-                string json = Newtonsoft.Json.JsonConvert.SerializeObject(dados);
+                string json = Newtonsoft.Json.JsonConvert.SerializeObject(dados,Newtonsoft.Json.Formatting.Indented);
                 File.WriteAllText(arquivoDados, json);
                 if (EnviaMsgAgendaAtualizada != null) EnviaMsgAgendaAtualizada(null, null);
                 return true;

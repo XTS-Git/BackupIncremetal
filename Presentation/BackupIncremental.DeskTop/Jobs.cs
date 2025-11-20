@@ -1,7 +1,4 @@
 ﻿using Bkp.Incremental.Application;
-using System;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
 
 namespace nsBackup
 {
@@ -15,15 +12,14 @@ namespace nsBackup
         System.Timers.Timer horarioExecucao = null;
 
         public List<AgendaDto> agendas;
-        public DateTime ultimaVerificacao;
+        // public DateTime ultimaVerificacao;
 
         Agenda agenda;
 
 
         private void CarregaJobs()
         {
-            agenda = new Agenda();
-            agendas = agenda.LerDados();
+            agendas = new Agenda().LerDados();
             if (agendas.Count == 0)
                 throw new Exception("Não existe Agenda Criada");
 
@@ -132,13 +128,15 @@ namespace nsBackup
 
                 DateTime agora = DateTime.Now;
                 agora = Convert.ToDateTime(Convert.ToDateTime(agora.ToString()).ToString("dd/MM/yyyy HH:mm"));
-                ultimaVerificacao = agora;
+                // ultimaVerificacao = agora;
                 bool executou = false;
                 for (int i = 0; i < agendas.Count; i++)
                 {
-                    if (!agendas[i].Ativo)
-                        continue;
-                    if (agora == agendas[i].ProximaExecucao)
+                    if (!agendas[i].Ativo) continue;
+
+                    // executa se já passou do horário agendado e ainda não foi executado para essa ProximaExecucao
+                    DateTime proxima = agendas[i].ProximaExecucao;
+                    if (agora >= proxima && agendas[i].UltimaExecucao < proxima)
                     {
                         agendas[i] = ExecutaBackup(agendas[i]);
                         executou = true;
