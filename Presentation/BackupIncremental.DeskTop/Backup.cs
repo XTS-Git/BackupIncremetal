@@ -23,7 +23,7 @@ namespace nsBackup
         {
             copiaArquivos(pPastaOrigem, pPastaDestino, arquivos);
 
-            DirectoryInfo[] conteudoPasta = listaPastas(pPastaOrigem);
+            DirectoryInfo[] conteudoPasta = ListaPastas(pPastaOrigem);
             for (int i = 0; i < conteudoPasta.Length; i++)
             {
                 string pastaOrigem = Path.Combine(pPastaOrigem, conteudoPasta[i].Name);
@@ -35,12 +35,12 @@ namespace nsBackup
 
         private void copiaArquivos(string origem, string destino, string arquivos)
         {
-            DirectoryInfo info = new DirectoryInfo(origem);
+            DirectoryInfo infoFoldersOrigem = new DirectoryInfo(origem);
             string[] extencoes = (string.IsNullOrWhiteSpace(arquivos) ? "*.*" : arquivos).Split(new[] { '|', ';' }, StringSplitOptions.RemoveEmptyEntries);
             criaPasta(destino);
             for (int i = 0; i < extencoes.Length; i++)
             {
-                FileInfo[] filesOrigem = info.GetFiles(extencoes[i]);
+                FileInfo[] filesOrigem = infoFoldersOrigem.GetFiles(extencoes[i]);
                 for (int x = 0; x < filesOrigem.Length; x++)
                 {
                     FileInfo fileOrigem = filesOrigem[x];
@@ -90,7 +90,7 @@ namespace nsBackup
             }
             return retorno;
         }
-        public DirectoryInfo[] listaPastas(string pPasta)
+        public DirectoryInfo[] ListaPastas(string pPasta)
         {
             DirectoryInfo info = new DirectoryInfo(pPasta);
             return info.GetDirectories();
