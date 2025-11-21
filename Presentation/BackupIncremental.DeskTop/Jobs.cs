@@ -1,4 +1,5 @@
-﻿using Bkp.Incremental.Application;
+﻿using Bkp.Incremental.Application.Dto;
+using Bkp.Incremental.Application.Enums;
 
 namespace nsBackup
 {
@@ -128,13 +129,11 @@ namespace nsBackup
 
                 DateTime agora = DateTime.Now;
                 agora = Convert.ToDateTime(Convert.ToDateTime(agora.ToString()).ToString("dd/MM/yyyy HH:mm"));
-                // ultimaVerificacao = agora;
                 bool executou = false;
                 for (int i = 0; i < agendas.Count; i++)
                 {
                     if (!agendas[i].Ativo) continue;
 
-                    // executa se já passou do horário agendado e ainda não foi executado para essa ProximaExecucao
                     DateTime proxima = agendas[i].ProximaExecucao;
                     if (agora >= proxima && agendas[i].UltimaExecucao < proxima)
                     {
@@ -165,7 +164,7 @@ namespace nsBackup
         {
             if (onStart != null) onStart(this, null);
             backup = new Backup();
-            string s = backup.start(dto.PastaOrigem, dto.PastaDestino, dto.TiposArquivos, dto.CaminhoCompleto);
+            // string s = backup.start(dto.PastaOrigem, dto.PastaDestino, dto.TiposArquivos, dto.CaminhoCompleto);
             dto.ProximaExecucao = PreparaProximaExecucao(dto);
             dto.UltimaExecucao = DateTime.Now;
             if (onStop != null) onStop(this, null);

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Bkp.Incremental.Application
+namespace Bkp.Incremental.Application.Enums
 {
     public enum IntervaloEnum
     {

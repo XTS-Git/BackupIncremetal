@@ -1,4 +1,11 @@
-﻿using Bkp.Incremental.Application;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
+using Bkp.Incremental.Application.Dto;
+using Bkp.Incremental.Application.Enums;
+using Bkp.Incremental.Application.Extensions;
 
 namespace nsBackup
 {
@@ -8,7 +15,10 @@ namespace nsBackup
         int X = 0;
         int Y = 0;
         int linhaSelecionada = -1;
-        private readonly BindingSource bsAgendas = new();
+        private readonly BindingSource _bsAgendas = new();
+        private readonly BindingSource _bsIncluded = new();
+        private readonly BindingSource _bsExcluded = new();
+        private FileExplorerSelectionControl? _fileExplorer;
         public Jobs job;
 
         public FrmAgenda()
@@ -18,6 +28,135 @@ namespace nsBackup
             habilitaCampos(false);
             BotoesInicio();
             PopulaDataGrid();
+
+            // try to wire FileExplorerSelectionControl and UI lists if present on the form
+            WireExplorerIfPresent();
+        }
+
+        private void WireExplorerIfPresent()
+        {
+            // safe lookup by name so the code doesn't depend on designer-generated field names
+            var explorer = Controls.Find("fileExplorerSelectionControl1", true).FirstOrDefault() as FileExplorerSelectionControl;
+            _fileExplorer = explorer;
+            var lstIncluded = Controls.Find("lstIncludedFiles", true).FirstOrDefault() as ListBox;
+            var lstExcluded = Controls.Find("lstExcludedFiles", true).FirstOrDefault() as ListBox;
+            var btnRemoveIncluded = Controls.Find("btnRemoveIncluded", true).FirstOrDefault() as Button;
+            var btnRemoveExcluded = Controls.Find("btnRemoveExcluded", true).FirstOrDefault() as Button;
+
+            if (lstIncluded != null)
+            {
+                lstIncluded.DataSource = _bsIncluded;
+                lstIncluded.DisplayMember = nameof(ItensAgendaDto.Nome);
+            }
+
+            if (lstExcluded != null)
+            {
+                lstExcluded.DataSource = _bsExcluded;
+                lstExcluded.DisplayMember = nameof(ItensAgendaDto.Nome);
+            }
+
+            if (btnRemoveIncluded != null)
+                btnRemoveIncluded.Click += (s, e) => RemoveSelectedFromBinding(lstIncluded, _bsIncluded);
+
+            if (btnRemoveExcluded != null)
+                btnRemoveExcluded.Click += (s, e) => RemoveSelectedFromBinding(lstExcluded, _bsExcluded);
+
+            if (explorer != null)
+            {
+                explorer.IncludeRequested += (s, e) =>
+                {
+                    AddPathsToBinding(_bsIncluded, e.Paths);
+                    // ensure explorer highlights the added items (explorer already does this internally,
+                    // but call SetIncludedPaths to be sure form-driven additions stay in sync)
+                    explorer.AddIncludedPaths(e.Paths);
+                };
+
+                explorer.ExcludeRequested += (s, e) =>
+                {
+                    AddPathsToBinding(_bsExcluded, e.Paths);
+                    explorer.AddExcludedPaths(e.Paths);
+                };
+
+                // keep explorer root in sync when origin folder changes
+                txtPastaOrigem.TextChanged += (s, e) =>
+                {
+                    if (!string.IsNullOrWhiteSpace(txtPastaOrigem.Text))
+                        explorer.SetRoot(txtPastaOrigem.Text);
+                };
+
+                // if there is already a origem folder, set it
+                if (!string.IsNullOrWhiteSpace(txtPastaOrigem.Text))
+                    explorer.SetRoot(txtPastaOrigem.Text);
+            }
+        }
+
+        private void AddPathsToBinding(BindingSource bs, IReadOnlyList<string> paths)
+        {
+            if (paths == null || paths.Count == 0) return;
+
+            var list = bs.DataSource as List<ItensAgendaDto> ?? new List<ItensAgendaDto>();
+
+            foreach (var p in paths)
+            {
+                if (string.IsNullOrWhiteSpace(p)) continue;
+                // avoid duplicates by path (case-insensitive)
+                if (list.Any(x => string.Equals(x.Nome, p, StringComparison.OrdinalIgnoreCase)))
+                    continue;
+
+                var item = new ItensAgendaDto
+                {
+                    Nome = p,
+                    TipoIten = Directory.Exists(p) ? TipoItenAgendaEnum.Folder : TipoItenAgendaEnum.File,
+                    Sucesso = false,
+                    DataUltimoBkp = DateTime.MinValue
+                };
+                list.Add(item);
+            }
+
+            bs.DataSource = list;
+            bs.ResetBindings(false);
+
+            // reflect back to explorer highlighting when form updates lists programmatically
+            try
+            {
+                if (bs == _bsIncluded)
+                    _fileExplorer?.SetIncludedPaths(list.Select(x => x.Nome));
+                else if (bs == _bsExcluded)
+                    _fileExplorer?.SetExcludedPaths(list.Select(x => x.Nome));
+            }
+            catch { /* ignore if explorer not present */ }
+        }
+
+        private void RemoveSelectedFromBinding(ListBox? listBox, BindingSource bs)
+        {
+            var list = bs.DataSource as List<ItensAgendaDto>;
+            if (list == null || list.Count == 0) return;
+
+            if (listBox != null)
+            {
+                var selected = listBox.SelectedItems.Cast<ItensAgendaDto>().ToList();
+                foreach (var s in selected)
+                    list.RemoveAll(x => string.Equals(x.Nome, s.Nome, StringComparison.OrdinalIgnoreCase));
+            }
+            else
+            {
+                // fallback: remove currently selected item in binding source (if any)
+                if (bs.Current is ItensAgendaDto current)
+                    list.RemoveAll(x => string.Equals(x.Nome, current.Nome, StringComparison.OrdinalIgnoreCase));
+            }
+
+            bs.DataSource = list;
+            bs.ResetBindings(false);
+
+            // update explorer highlights
+            try
+            {
+                if (bs == _bsIncluded)
+                    _fileExplorer?.SetIncludedPaths(list.Select(x => x.Nome));
+                else if (bs == _bsExcluded)
+                    _fileExplorer?.SetExcludedPaths(list.Select(x => x.Nome));
+            }
+            catch { }
         }
 
         private void PopulaComboIntervalo()
@@ -43,7 +182,6 @@ namespace nsBackup
             dtgAgendas.Columns["colPastaOrigem"].DataPropertyName = nameof(AgendaDto.PastaOrigem);
             dtgAgendas.Columns["colPastaDestino"].DataPropertyName = nameof(AgendaDto.PastaDestino);
             dtgAgendas.Columns["colTipos"].DataPropertyName = nameof(AgendaDto.TiposArquivos);
-            dtgAgendas.Columns["colRoot"].DataPropertyName = nameof(AgendaDto.CaminhoCompleto);
             dtgAgendas.Columns["colAtivo"].DataPropertyName = nameof(AgendaDto.Ativo);
             dtgAgendas.Columns["colIntervalo"].DataPropertyName = nameof(AgendaDto.Intervalo);
             dtgAgendas.DataSource = null;
@@ -52,8 +190,8 @@ namespace nsBackup
             var lista = agenda.LerDados() ?? new List<AgendaDto>();
             lista.Sort((x, y) => x.HoraExecucao.CompareTo(y.HoraExecucao));
 
-            bsAgendas.DataSource = lista;
-            dtgAgendas.DataSource = bsAgendas;
+            _bsAgendas.DataSource = lista;
+            dtgAgendas.DataSource = _bsAgendas;
         }
 
         void habilitaCampos(bool habilita)
@@ -62,10 +200,16 @@ namespace nsBackup
             txtPastaDestino.Enabled = habilita;
             txtPastaOrigem.Enabled = habilita;
             txtTiposArquivos.Enabled = habilita;
+            cmbIntervalo.Enabled = habilita;
+
             btnPastaDestino.Enabled = habilita;
             btnPastaOrigem.Enabled = habilita;
             btnTipoArquivo.Enabled = habilita;
-            cmbIntervalo.Enabled = habilita;
+
+            // btnAddItens.Enabled = (!string.IsNullOrWhiteSpace(txtPastaOrigem.Text));
+            // btnDelItens.Enabled = (!string.IsNullOrWhiteSpace(txtPastaOrigem.Text));
+
+
             chkAtivo.Checked = habilita;
             if (!habilita)
             {
@@ -74,6 +218,16 @@ namespace nsBackup
                 txtPastaOrigem.Text = string.Empty;
                 txtTiposArquivos.Text = string.Empty;
                 linhaSelecionada = -1;
+
+                // clear temporary selections when leaving edit mode
+                _bsIncluded.DataSource = new List<ItensAgendaDto>();
+                _bsExcluded.DataSource = new List<ItensAgendaDto>();
+                _bsIncluded.ResetBindings(false);
+                _bsExcluded.ResetBindings(false);
+
+                // clear highlights in explorer
+                _fileExplorer?.ClearIncluded();
+                _fileExplorer?.ClearExcluded();
             }
             else
             {
@@ -94,7 +248,7 @@ namespace nsBackup
             tsBtnDeletar.Enabled = true;
             tsBtnSalvar.Enabled = true;
             tsCancelarEdicao.Enabled = true;
-            tsExecutarNow.Enabled = true;            
+            tsExecutarNow.Enabled = true;
         }
         private void btnFechar_Click(object sender, EventArgs e)
         {
@@ -199,7 +353,7 @@ namespace nsBackup
                 return;
             }
 
-            var lista = bsAgendas.DataSource as List<AgendaDto>;
+            var lista = _bsAgendas.DataSource as List<AgendaDto>;
             if (lista == null || index < 0 || index >= lista.Count)
             {
                 MessageBox.Show("Seleção inválida.", "Excluir tarefa", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -235,8 +389,8 @@ namespace nsBackup
             }
 
             // atualiza binding e UI
-            bsAgendas.DataSource = lista;
-            bsAgendas.ResetBindings(false);
+            _bsAgendas.DataSource = lista;
+            _bsAgendas.ResetBindings(false);
             linhaSelecionada = -1;
             habilitaCampos(false);
             BotoesInicio();
@@ -272,44 +426,51 @@ namespace nsBackup
                 dto.PastaOrigem = txtPastaOrigem.Text;
                 dto.PastaDestino = txtPastaDestino.Text;
                 dto.TiposArquivos = txtTiposArquivos.Text;
-                dto.CaminhoCompleto = chkRoot.Checked;
                 dto.Ativo = chkAtivo.Checked;
                 if (cmbIntervalo.SelectedValue != null)
                 {
-                    var enumVal = (IntervaloEnum)Enum.ToObject(typeof(IntervaloEnum),(int)cmbIntervalo.SelectedValue);
+                    var enumVal = (IntervaloEnum)Enum.ToObject(typeof(IntervaloEnum), (int)cmbIntervalo.SelectedValue);
                     dto.Intervalo = enumVal.ToString();
                 }
-                var lista = bsAgendas.DataSource as List<AgendaDto>;
+
+                // persist included/excluded selections into the new dto
+                dto.ItensAddAgenda = (_bsIncluded.DataSource as List<ItensAgendaDto>) ?? new List<ItensAgendaDto>();
+                dto.ItensDelAgenda = (_bsExcluded.DataSource as List<ItensAgendaDto>) ?? new List<ItensAgendaDto>();
+
+                var lista = _bsAgendas.DataSource as List<AgendaDto>;
                 if (lista == null) lista = new List<AgendaDto>();
                 lista.Add(dto);
-                bsAgendas.DataSource = lista;
+                _bsAgendas.DataSource = lista;
             }
             else
             {
-                var lista = bsAgendas.DataSource as List<AgendaDto>;
+                var lista = _bsAgendas.DataSource as List<AgendaDto>;
                 if (lista != null && linhaSelecionada >= 0 && linhaSelecionada < lista.Count)
                 {
                     lista[linhaSelecionada].HoraExecucao = txtHora.Text;
                     lista[linhaSelecionada].PastaOrigem = txtPastaOrigem.Text;
                     lista[linhaSelecionada].PastaDestino = txtPastaDestino.Text;
                     lista[linhaSelecionada].TiposArquivos = txtTiposArquivos.Text;
-                    lista[linhaSelecionada].CaminhoCompleto = chkRoot.Checked;
                     lista[linhaSelecionada].Ativo = chkAtivo.Checked;
                     if (cmbIntervalo.SelectedValue != null)
                     {
                         var enumVal = (IntervaloEnum)Enum.ToObject(typeof(IntervaloEnum), (int)cmbIntervalo.SelectedValue);
                         lista[linhaSelecionada].Intervalo = enumVal.ToString();
                     }
+
+                    // persist included/excluded selections into the existing dto
+                    lista[linhaSelecionada].ItensAddAgenda = (_bsIncluded.DataSource as List<ItensAgendaDto>) ?? new List<ItensAgendaDto>();
+                    lista[linhaSelecionada].ItensDelAgenda = (_bsExcluded.DataSource as List<ItensAgendaDto>) ?? new List<ItensAgendaDto>();
                 }
             }
 
-            var currentList = bsAgendas.DataSource as List<AgendaDto> ?? new List<AgendaDto>();
+            var currentList = _bsAgendas.DataSource as List<AgendaDto> ?? new List<AgendaDto>();
             if (agenda.SalvarDados(currentList))
             {
                 job.atualizaAgenda = true;
             }
 
-            bsAgendas.ResetBindings(false);
+            _bsAgendas.ResetBindings(false);
 
             BotoesInicio();
             habilitaCampos(false);
@@ -337,7 +498,7 @@ namespace nsBackup
             txtPastaDestino.Text = dto.PastaDestino ?? string.Empty;
             txtPastaOrigem.Text = dto.PastaOrigem ?? string.Empty;
             txtTiposArquivos.Text = dto.TiposArquivos ?? string.Empty;
-            chkRoot.Checked = dto.CaminhoCompleto;
+            // chkRoot.Checked = dto.CaminhoCompleto;
             chkAtivo.Checked = dto.Ativo;
 
             if (!string.IsNullOrEmpty(dto.Intervalo))
@@ -345,6 +506,24 @@ namespace nsBackup
                 if (Enum.TryParse<IntervaloEnum>(dto.Intervalo, out var enumVal))
                     cmbIntervalo.SelectedValue = (int)enumVal;
             }
+
+            // load persisted include/exclude lists into the temporary binding sources
+            _bsIncluded.DataSource = dto.ItensAddAgenda ?? new List<ItensAgendaDto>();
+            _bsExcluded.DataSource = dto.ItensDelAgenda ?? new List<ItensAgendaDto>();
+            _bsIncluded.ResetBindings(false);
+            _bsExcluded.ResetBindings(false);
+
+            // update explorer highlights for these persisted lists
+            try
+            {
+                var explorer = _fileExplorer;
+                if (explorer != null)
+                {
+                    explorer.SetIncludedPaths(dto.ItensAddAgenda?.Select(i => i.Nome) ?? Enumerable.Empty<string>());
+                    explorer.SetExcludedPaths(dto.ItensDelAgenda?.Select(i => i.Nome) ?? Enumerable.Empty<string>());
+                }
+            }
+            catch { /* ignore if explorer not present */ }
 
             habilitaCampos(true);
             BotoesEditar();
@@ -355,7 +534,7 @@ namespace nsBackup
             if (dtgAgendas.Rows.Count == 0) return;
 
             var nomeColuna = dtgAgendas.Columns[e.ColumnIndex].Name;
-            var lista = bsAgendas.DataSource as List<AgendaDto>;
+            var lista = _bsAgendas.DataSource as List<AgendaDto>;
             if (lista == null) return;
 
             if (nomeColuna.Equals("colHora"))
@@ -366,12 +545,10 @@ namespace nsBackup
                 lista.Sort((x, y) => x.PastaDestino.CompareTo(y.PastaDestino));
             else if (nomeColuna.Equals("colTipos"))
                 lista.Sort((x, y) => x.TiposArquivos.CompareTo(y.TiposArquivos));
-            else if (nomeColuna.Equals("colRoot"))
-                lista.Sort((x, y) => x.CaminhoCompleto.CompareTo(y.CaminhoCompleto));
             else if (nomeColuna.Equals("colAtivo"))
                 lista.Sort((x, y) => x.Ativo.CompareTo(y.Ativo));
 
-            bsAgendas.ResetBindings(false);
+            _bsAgendas.ResetBindings(false);
         }
 
         private void tsExecutarNow_Click(object sender, EventArgs e)
@@ -382,13 +559,20 @@ namespace nsBackup
                 PastaOrigem = txtPastaOrigem.Text,
                 PastaDestino = txtPastaDestino.Text,
                 TiposArquivos = txtTiposArquivos.Text,
-                CaminhoCompleto = chkRoot.Checked,
-                Ativo = chkAtivo.Checked
+                Ativo = chkAtivo.Checked,
+                ItensAddAgenda = (_bsIncluded.DataSource as List<ItensAgendaDto>) ?? new List<ItensAgendaDto>(),
+                ItensDelAgenda = (_bsExcluded.DataSource as List<ItensAgendaDto>) ?? new List<ItensAgendaDto>()
             };
 
             Jobs job = new Jobs();
             job.ExecutaBackup(dto);
 
+        }
+
+        private void txtPastaOrigem_TextChanged(object sender, EventArgs e)
+        {
+            // btnAddItens.Enabled = (!string.IsNullOrWhiteSpace(txtPastaOrigem.Text));
+            // btnDelItens.Enabled = (!string.IsNullOrWhiteSpace(txtPastaOrigem.Text));
         }
     }
 }

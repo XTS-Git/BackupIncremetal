@@ -1,4 +1,4 @@
-﻿namespace Bkp.Incremental.Application
+﻿namespace Bkp.Incremental.Application.Extensions
 {
     public static class EnumExtensions
     {

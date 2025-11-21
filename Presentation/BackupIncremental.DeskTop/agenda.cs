@@ -1,23 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Windows.Forms;
+﻿using Bkp.Incremental.Application.Dto;
 
 namespace nsBackup
 {
-
-    public class AgendaDto
-    {
-        public DateTime ProximaExecucao { get; set; }
-        public string HoraExecucao { get; set; }
-        public string Intervalo { get; set; }
-        public string PastaOrigem { get; set; }
-        public string PastaDestino { get; set; }
-        public string TiposArquivos { get; set; }
-        public bool CaminhoCompleto { get; set; }
-        public DateTime UltimaExecucao { get; set; }
-        public bool Ativo { get; set; }
-    }
 
     public class Agenda
     {
@@ -29,7 +13,7 @@ namespace nsBackup
             {
                 string pasta = string.Format(@"{0}\Backup", Environment.GetFolderPath(Environment.SpecialFolder.Personal));
                 DirectoryInfo dir;
-                dir = Directory.CreateDirectory(pasta);                
+                dir = Directory.CreateDirectory(pasta);
                 if (dir == null)
                     throw new Exception("Impossível criar Pasta da agenda");
             }
@@ -40,7 +24,7 @@ namespace nsBackup
         {
             try
             {
-                string json = Newtonsoft.Json.JsonConvert.SerializeObject(dados,Newtonsoft.Json.Formatting.Indented);
+                string json = Newtonsoft.Json.JsonConvert.SerializeObject(dados, Newtonsoft.Json.Formatting.Indented);
                 File.WriteAllText(arquivoDados, json);
                 if (EnviaMsgAgendaAtualizada != null) EnviaMsgAgendaAtualizada(null, null);
                 return true;
