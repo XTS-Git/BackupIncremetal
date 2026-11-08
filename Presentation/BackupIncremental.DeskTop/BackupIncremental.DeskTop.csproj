@@ -13,10 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Bkp.Incremental.Application\Bkp.Incremental.Application.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Update="FrmAgenda.cs">
       <SubType>Form</SubType>
     </Compile>

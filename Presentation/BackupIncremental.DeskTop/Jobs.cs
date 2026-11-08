@@ -1,6 +1,4 @@
-﻿using Bkp.Incremental.Application;
-
-namespace nsBackup
+﻿namespace nsBackup
 {
     public class Jobs
     {

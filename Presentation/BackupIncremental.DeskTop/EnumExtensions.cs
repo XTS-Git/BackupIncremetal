@@ -1,4 +1,4 @@
-﻿namespace Bkp.Incremental.Application
+﻿namespace nsBackup
 {
     public static class EnumExtensions
     {
